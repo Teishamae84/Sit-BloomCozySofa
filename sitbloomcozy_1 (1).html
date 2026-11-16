@@ -1,0 +1,2288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Sit & Bloom — Cozy Sofa Companion App</title>
+    <meta name="application-name" content="Sit & Bloom">
+    <meta name="apple-mobile-web-app-title" content="Sit & Bloom">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#fdf5f6">
+    <link id="pwa-apple-icon" rel="apple-touch-icon" href="">
+    <link id="pwa-manifest-link" rel="manifest" href="">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #fdf6f5;
+            --bg-soft: #fffaf8;
+            --card-bg: #ffffff;
+            --ink-main: #3b262c;
+            --ink-muted: #7b5e66;
+            --accent: #c96b84;
+            --accent-soft: #fce8ee;
+            --secondary: #5d8a74;
+            --secondary-soft: #eaf4ef;
+            --border-subtle: #efd7de;
+            --lamp-glow: rgba(247, 198, 211, 0.35);
+            --card-ruled: #f4dce3;
+        }
+
+        /* =========================================================
+           THEME 1: THE PLUSH LOVESEAT (WOMAN — SUNLIT & LAMP MODES)
+           ========================================================= */
+        body.theme-loveseat {
+            --bg-main: #fdf5f6;
+            --bg-soft: #fffafb;
+            --card-bg: #ffffff;
+            --ink-main: #3b262c;
+            --ink-muted: #7a5c64;
+            --accent: #c96b84;
+            --accent-soft: #fce8ee;
+            --secondary: #5d8a74;
+            --secondary-soft: #eaf4ef;
+            --border-subtle: #efd5dd;
+            --lamp-glow: rgba(244, 189, 206, 0.36);
+            --card-ruled: #f4dbe2;
+        }
+        body.theme-loveseat.lamp-on {
+            --bg-main: #26181d;
+            --bg-soft: #311f26;
+            --card-bg: #3b262e;
+            --ink-main: #fbeff2;
+            --ink-muted: #d6b6bf;
+            --accent: #f095ad;
+            --accent-soft: #4e313c;
+            --secondary: #8bc3a7;
+            --secondary-soft: #283f35;
+            --border-subtle: #573843;
+            --lamp-glow: rgba(255, 194, 158, 0.22);
+            --card-ruled: #523640;
+        }
+
+        /* =========================================================
+           THEME 2: THE CLASSIC LA-Z-BOY (MAN — SUNLIT & LAMP MODES)
+           ========================================================= */
+        body.theme-lazboy {
+            --bg-main: #f4ede4;
+            --bg-soft: #faf5ee;
+            --card-bg: #fffcf7;
+            --ink-main: #2c1e16;
+            --ink-muted: #6c5547;
+            --accent: #9c5328;
+            --accent-soft: #f3e2d3;
+            --secondary: #4a6b57;
+            --secondary-soft: #e3ede7;
+            --border-subtle: #decab8;
+            --lamp-glow: rgba(224, 169, 109, 0.32);
+            --card-ruled: #e7d6c5;
+        }
+        body.theme-lazboy.lamp-on {
+            --bg-main: #1d1510;
+            --bg-soft: #271c16;
+            --card-bg: #32241c;
+            --ink-main: #f7ede3;
+            --ink-muted: #cbb6a4;
+            --accent: #e09158;
+            --accent-soft: #463226;
+            --secondary: #86b397;
+            --secondary-soft: #25382d;
+            --border-subtle: #4d392d;
+            --lamp-glow: rgba(245, 179, 102, 0.22);
+            --card-ruled: #47352a;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--ink-main);
+            transition: background-color 0.35s ease, color 0.35s ease;
+        }
+
+        .font-serif-editorial {
+            font-family: 'Fraunces', Georgia, serif;
+        }
+
+        .font-handwritten {
+            font-family: 'Caveat', cursive;
+        }
+
+        /* Ruled Index Card Effect */
+        .index-card-ruled {
+            background-image: repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                transparent 27px,
+                var(--card-ruled) 28px
+            );
+            background-position: 0 38px;
+        }
+
+        /* Gentle Steam Animation for Side-Table Drinks */
+        @keyframes steamRise {
+            0% { transform: translateY(0) scale(0.95); opacity: 0; }
+            45% { opacity: 0.65; }
+            100% { transform: translateY(-14px) scale(1.12); opacity: 0; }
+        }
+        .steam-wisp {
+            animation: steamRise 2.6s ease-in-out infinite;
+        }
+        .steam-wisp-2 {
+            animation: steamRise 2.6s ease-in-out 1.2s infinite;
+        }
+
+        /* Cushion Shake-Out Animation */
+        @keyframes cushionShake {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            20% { transform: rotate(-2.2deg) scale(1.02); }
+            40% { transform: rotate(2.2deg) scale(1.02); }
+            60% { transform: rotate(-1.6deg) scale(1.01); }
+            80% { transform: rotate(1.6deg) scale(1.01); }
+        }
+        .animate-cushion-shake {
+            animation: cushionShake 0.65s ease-in-out;
+        }
+
+        /* Soft Pop Animation */
+        @keyframes popIn {
+            0% { opacity: 0; transform: translateY(8px) scale(0.97); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-pop {
+            animation: popIn 0.28s ease-out forwards;
+        }
+
+        /* Floating Spark Burst */
+        @keyframes burstUp {
+            0% { opacity: 1; transform: translate(-50%, 0) scale(0.8); }
+            100% { opacity: 0; transform: translate(-50%, -70px) scale(1.45); }
+        }
+        .spark-burst-el {
+            position: fixed;
+            left: 50%;
+            top: 46%;
+            font-size: 2.2rem;
+            pointer-events: none;
+            z-index: 9999;
+            animation: burstUp 0.9s ease-out forwards;
+        }
+
+        /* Hide scrollbars cleanly where desired */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="theme-loveseat min-h-screen flex justify-center selection:bg-pink-200/50">
+
+    <!-- Ambient Living-Room Lamp Glow -->
+    <div id="ambient-lamp-backdrop" class="fixed inset-0 pointer-events-none transition-opacity duration-500" style="background: radial-gradient(circle at 50% 12%, var(--lamp-glow), transparent 68%);"></div>
+
+    <!-- =====================================================================
+         SCREEN 1: OPENING LIVING-ROOM SEAT SELECTION ("PULL UP A SEAT")
+         ===================================================================== -->
+    <div id="onboarding-screen" class="w-full max-w-[480px] min-h-screen px-5 py-8 flex flex-col justify-between relative z-10">
+        <div class="space-y-6 animate-pop">
+            <div class="text-center space-y-2 pt-2">
+                <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold border" style="background-color: var(--accent-soft); border-color: var(--border-subtle); color: var(--accent);">
+                    🛋️ Pull Up a Seat Beside Me
+                </span>
+                <h1 class="font-serif-editorial text-3xl sm:text-4xl font-bold tracking-tight leading-tight">
+                    Welcome to Sit &amp; Bloom
+                </h1>
+                <p class="text-sm sm:text-base leading-relaxed max-w-[360px] mx-auto" style="color: var(--ink-muted);">
+                    No pressure, no hustle, and no filling out forms. Pick the chair that feels most comfortable to you—we’ll sit together and take today one gentle moment at a time.
+                </p>
+            </div>
+
+            <!-- Two Living Room Seat Cards -->
+            <div class="space-y-3.5 pt-1">
+                <!-- Option A: Woman — The Plush Loveseat -->
+                <button type="button" onclick="chooseSeatAndEnter('loveseat')" class="w-full text-left rounded-[28px] p-5 border-2 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-sm relative overflow-hidden" style="background: linear-gradient(135deg, #fff8fa 0%, #fcebf0 100%); border-color: #eab9c7; color: #3b262c;">
+                    <div class="flex items-center gap-4">
+                        <!-- Custom Plush Loveseat SVG -->
+                        <div class="w-20 h-20 rounded-2xl flex items-center justify-center shrink-0 shadow-inner" style="background-color: #f9dce4;">
+                            <svg viewBox="0 0 80 64" class="w-16 h-14">
+                                <rect x="10" y="14" width="60" height="26" rx="11" fill="#df889f"/>
+                                <rect x="15" y="18" width="23" height="18" rx="7" fill="#eca5b8"/>
+                                <rect x="42" y="18" width="23" height="18" rx="7" fill="#eca5b8"/>
+                                <rect x="4" y="24" width="12" height="24" rx="6" fill="#d1738c"/>
+                                <rect x="64" y="24" width="12" height="24" rx="6" fill="#d1738c"/>
+                                <rect x="12" y="36" width="56" height="13" rx="6" fill="#e797ad"/>
+                                <path d="M52 22 C56 26, 58 34, 54 44 L63 44 C65 34, 63 26, 59 22 Z" fill="#fff6e9" opacity="0.9"/>
+                                <rect x="16" y="49" width="5" height="8" rx="2" fill="#8b5e4b"/>
+                                <rect x="59" y="49" width="5" height="8" rx="2" fill="#8b5e4b"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full" style="background-color: #f8dce4; color: #b5546e;">For Women</span>
+                                <span class="text-lg">🌷✨</span>
+                            </div>
+                            <h2 class="font-serif-editorial text-xl font-bold mt-1">The Plush Loveseat</h2>
+                            <p class="text-xs leading-relaxed mt-1" style="color: #705059;">
+                                Soft blush velvet, cozy throw blankets, rose-gold lamplight, and pastel index cards.
+                            </p>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- Option B: Man — The Classic La-Z-Boy -->
+                <button type="button" onclick="chooseSeatAndEnter('lazboy')" class="w-full text-left rounded-[28px] p-5 border-2 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-sm relative overflow-hidden" style="background: linear-gradient(135deg, #faf3eb 0%, #eedbc8 100%); border-color: #cca889; color: #2c1e16;">
+                    <div class="flex items-center gap-4">
+                        <!-- Custom Classic La-Z-Boy SVG -->
+                        <div class="w-20 h-20 rounded-2xl flex items-center justify-center shrink-0 shadow-inner" style="background-color: #e4cbb3;">
+                            <svg viewBox="0 0 80 64" class="w-16 h-14">
+                                <rect x="17" y="8" width="46" height="32" rx="10" fill="#9c5328"/>
+                                <rect x="22" y="13" width="36" height="22" rx="7" fill="#b36537"/>
+                                <rect x="7" y="23" width="14" height="25" rx="6" fill="#85431d"/>
+                                <rect x="59" y="23" width="14" height="25" rx="6" fill="#85431d"/>
+                                <rect x="16" y="36" width="48" height="14" rx="6" fill="#a85b2e"/>
+                                <rect x="20" y="48" width="40" height="7" rx="3.5" fill="#733816"/>
+                                <rect x="18" y="54" width="6" height="5" rx="2" fill="#3d2518"/>
+                                <rect x="56" y="54" width="6" height="5" rx="2" fill="#3d2518"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full" style="background-color: #e4cbb3; color: #85431d;">For Men</span>
+                                <span class="text-lg">🔥🪵</span>
+                            </div>
+                            <h2 class="font-serif-editorial text-xl font-bold mt-1">The Classic La-Z-Boy</h2>
+                            <p class="text-xs leading-relaxed mt-1" style="color: #634b3d;">
+                                Rich cognac leather, warm walnut wood, brass reading lamp, and sturdy kraft index cards.
+                            </p>
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <div class="text-center pt-6 pb-2 space-y-1">
+            <p class="text-xs font-medium" style="color: var(--ink-muted);">
+                You can switch seats or turn on the evening lamp anytime inside.
+            </p>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         SCREEN 2: MAIN LIVING-ROOM APP SHELL (6 INTERACTIVE TABS)
+         ===================================================================== -->
+    <div id="main-app-shell" class="hidden w-full max-w-[480px] min-h-screen flex flex-col justify-between relative z-10 pb-24">
+
+        <!-- Sticky Top Living-Room Header -->
+        <header class="sticky top-0 z-30 px-4 py-3 border-b backdrop-blur-md" style="background-color: color-mix(in srgb, var(--bg-main) 88%, transparent); border-color: var(--border-subtle);">
+            <div class="flex items-center justify-between gap-1.5">
+                <!-- App Brand + Instant Seat Flip -->
+                <button type="button" onclick="toggleSeatTheme()" class="flex items-center gap-1.5 text-left group" title="Tap to switch Loveseat / La-Z-Boy">
+                    <span id="header-seat-emoji" class="text-xl">🛋️</span>
+                    <div>
+                        <div class="font-serif-editorial text-sm font-bold leading-none">Sit &amp; Bloom</div>
+                        <div id="header-seat-sub" class="text-[10px] font-semibold mt-0.5" style="color: var(--accent);">Loveseat • Switch</div>
+                    </div>
+                </button>
+
+                <!-- Right Controls: Lamp Mode + My Corner Drawer -->
+                <div class="flex items-center gap-1.5">
+                    <button type="button" onclick="toggleLampMode()" id="lamp-toggle-btn" class="min-h-[34px] px-2.5 py-1 rounded-full text-[11px] font-semibold border flex items-center gap-1 transition-all" style="background-color: var(--card-bg); border-color: var(--border-subtle); color: var(--ink-main);">
+                        <span id="lamp-toggle-icon">☀️</span>
+                        <span id="lamp-toggle-text">Sunlit</span>
+                    </button>
+
+                    <button type="button" onclick="openProfileDrawer()" class="min-h-[34px] px-2.5 py-1 rounded-full text-[11px] font-bold border flex items-center gap-1 transition-all shadow-2xs" style="background-color: var(--accent-soft); border-color: var(--border-subtle); color: var(--accent);">
+                        <span>🪴</span>
+                        <span id="header-profile-label">My Corner</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Tab Content Container -->
+        <main class="px-4 pt-4 space-y-5 flex-1">
+
+            <!-- =============================================================
+                 TAB 1: TODAY (YOUR COZY SOFA DESK)
+                 ============================================================= -->
+            <section id="tab-today" class="space-y-5 animate-pop">
+
+                <!-- Companion Welcome Card -->
+                <div class="rounded-[26px] p-4 border shadow-xs" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                    <div class="flex items-start justify-between gap-2">
+                        <div>
+                            <div class="flex items-center gap-1.5">
+                                <span id="sofa-companion-icon" class="text-lg">🌷</span>
+                                <span id="sofa-companion-banner" class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--accent);">Sitting Together on the Loveseat</span>
+                            </div>
+                            <h2 id="today-greeting" class="font-serif-editorial text-[22px] leading-snug font-bold mt-0.5">
+                                Welcome back to the sofa
+                            </h2>
+                        </div>
+                        <button type="button" onclick="cycleMoodQuickly()" class="min-h-[36px] px-3 py-1 rounded-full text-xs font-semibold border flex items-center gap-1.5 shrink-0" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">
+                            <span id="today-mood-emoji">🍵</span>
+                            <span id="today-mood-label">Warm Tea</span>
+                        </button>
+                    </div>
+                    <p id="today-archetype-line" class="text-xs mt-1.5 leading-relaxed" style="color: var(--ink-muted);">
+                        No rush today. Even one tiny act of kindness toward yourself counts as a full win.
+                    </p>
+                </div>
+
+                <!-- Side-Table Drink Tray & Soundscapes (Step 1) -->
+                <div class="rounded-[26px] p-4 border shadow-xs space-y-3" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider" style="color: var(--accent);">🪵 On Your Side Table</span>
+                        <span id="sip-progress-label" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full" style="background-color: var(--secondary-soft); color: var(--secondary);">1 / 5 Comfort Sips</span>
+                    </div>
+
+                    <!-- Drink Selector Pills -->
+                    <div class="grid grid-cols-4 gap-1.5">
+                        <button type="button" onclick="selectDrink('tea')" id="drink-btn-tea" class="drink-pill py-2 px-1 rounded-2xl border text-center transition-all">
+                            <div class="text-lg">🍵</div>
+                            <div class="text-[10px] font-bold mt-0.5">Tea</div>
+                        </button>
+                        <button type="button" onclick="selectDrink('coffee')" id="drink-btn-coffee" class="drink-pill py-2 px-1 rounded-2xl border text-center transition-all">
+                            <div class="text-lg">☕</div>
+                            <div class="text-[10px] font-bold mt-0.5">Coffee</div>
+                        </button>
+                        <button type="button" onclick="selectDrink('cocoa')" id="drink-btn-cocoa" class="drink-pill py-2 px-1 rounded-2xl border text-center transition-all">
+                            <div class="text-lg">🍫</div>
+                            <div class="text-[10px] font-bold mt-0.5">Cocoa</div>
+                        </button>
+                        <button type="button" onclick="selectDrink('lemonade')" id="drink-btn-lemonade" class="drink-pill py-2 px-1 rounded-2xl border text-center transition-all">
+                            <div class="text-lg">🍋</div>
+                            <div class="text-[10px] font-bold mt-0.5">Lemonade</div>
+                        </button>
+                    </div>
+
+                    <!-- Active Mug & Take a Sip Action -->
+                    <div class="flex items-center justify-between gap-3 p-3 rounded-2xl border" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">
+                        <div class="flex items-center gap-3">
+                            <div class="relative w-11 h-11 rounded-2xl flex items-center justify-center text-2xl border" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                                <span id="active-drink-emoji">🍵</span>
+                                <span class="steam-wisp absolute -top-2 left-2.5 text-xs opacity-60">〰️</span>
+                                <span class="steam-wisp-2 absolute -top-2.5 right-2.5 text-xs opacity-60">〰️</span>
+                            </div>
+                            <div>
+                                <div id="active-drink-name" class="text-xs font-bold">Warm Chamomile Tea</div>
+                                <div id="active-drink-note" class="text-[11px]" style="color: var(--ink-muted);">Take a slow sip whenever you need a pause.</div>
+                            </div>
+                        </div>
+                        <button type="button" onclick="takeDrinkSip()" class="min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs font-bold text-white shrink-0 shadow-2xs active:scale-95 transition-transform" style="background-color: var(--accent);">
+                            Take a Sip ✨
+                        </button>
+                    </div>
+
+                    <!-- Living-Room Soundscape Buttons -->
+                    <div class="pt-0.5">
+                        <div class="text-[11px] font-semibold mb-1.5" style="color: var(--ink-muted);">Living-Room Soundscape:</div>
+                        <div class="grid grid-cols-4 gap-1.5">
+                            <button type="button" onclick="setSoundscape('off')" id="sound-btn-off" class="sound-pill min-h-[34px] rounded-xl border text-[11px] font-bold">Quiet</button>
+                            <button type="button" onclick="setSoundscape('fire')" id="sound-btn-fire" class="sound-pill min-h-[34px] rounded-xl border text-[11px] font-bold">🔥 Fire</button>
+                            <button type="button" onclick="setSoundscape('rain')" id="sound-btn-rain" class="sound-pill min-h-[34px] rounded-xl border text-[11px] font-bold">🌧️ Rain</button>
+                            <button type="button" onclick="setSoundscape('hum')" id="sound-btn-hum" class="sound-pill min-h-[34px] rounded-xl border text-[11px] font-bold">📻 Vinyl</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FREE FEATURE 1: COZY BODY-DOUBLING TIMER ("SIT WITH ME") -->
+                <div class="rounded-[26px] p-4 border shadow-xs space-y-3" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--secondary);">🕯️ Cozy Body-Doubling</span>
+                            <h3 class="font-serif-editorial text-lg font-bold leading-snug">Sit With Me While I Do 1 Thing</h3>
+                        </div>
+                        <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full" style="background-color: var(--secondary-soft); color: var(--secondary);">Free • Zero Rush</span>
+                    </div>
+                    <p class="text-xs leading-relaxed" style="color: var(--ink-muted);">
+                        Pick one tiny task—I’ll sit right here on the sofa with you until the soft chime rings. You don’t even have to finish it; just starting counts.
+                    </p>
+                    <input id="body-double-task-input" type="text" maxlength="55" placeholder="e.g., Wash 3 dishes, fold 5 shirts, or take a warm shower..." class="w-full min-h-[40px] px-3 py-2 rounded-xl border text-xs focus:outline-none" style="background-color: var(--bg-soft); border-color: var(--border-subtle); color: var(--ink-main);" />
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-1.5">
+                            <button type="button" onclick="setBodyDoubleMinutes(5)" id="bd-min-5" class="min-h-[36px] px-3 rounded-xl border text-xs font-bold">5 min</button>
+                            <button type="button" onclick="setBodyDoubleMinutes(10)" id="bd-min-10" class="min-h-[36px] px-3 rounded-xl border text-xs font-bold">10 min</button>
+                        </div>
+                        <div class="font-serif-editorial text-xl font-bold tabular-nums" id="body-double-clock">05:00</div>
+                        <button type="button" onclick="toggleBodyDoubleTimer()" id="body-double-action-btn" class="min-h-[38px] px-4 py-1.5 rounded-xl text-xs font-bold text-white shadow-2xs" style="background-color: var(--secondary);">
+                            Sit Together 🕯️
+                        </button>
+                    </div>
+                    <p id="body-double-status" class="hidden text-xs font-semibold text-center pt-0.5" style="color: var(--accent);">
+                        🛋️ Sitting quietly beside you... take your time.
+                    </p>
+                </div>
+
+                <!-- 400,000+ Positive Message Engine Card -->
+                <div class="rounded-[26px] p-4 border shadow-xs space-y-2.5" style="background-color: var(--accent-soft); border-color: var(--border-subtle);">
+                    <div class="flex items-center justify-between gap-2">
+                        <span id="note-kicker" class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--accent);">💌 A Note Tucked Beside You</span>
+                        <span id="message-pool-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full" style="background-color: var(--card-bg); color: var(--ink-muted);">✨ Note #1 of 400,000+</span>
+                    </div>
+                    <p id="future-love-text" class="font-serif-editorial text-[16px] leading-relaxed font-medium">
+                        “You don’t have to fix your whole life this afternoon. Just sitting here and breathing is a brave start.”
+                    </p>
+                    <div class="flex items-center justify-between gap-2 pt-1 flex-wrap">
+                        <span id="future-love-signoff" class="text-xs font-semibold italic" style="color: var(--ink-muted);">— Right beside you, Future You 🌸</span>
+                        <div class="flex items-center gap-1.5">
+                            <button type="button" onclick="drawFreshLoveNote()" class="min-h-[32px] px-2.5 py-1 rounded-full text-[11px] font-bold border transition-all" style="background-color: var(--card-bg); border-color: var(--border-subtle); color: var(--ink-main);">
+                                Fresh Note ↻
+                            </button>
+                            <button type="button" onclick="saveCurrentLoveNoteToJournal()" class="min-h-[32px] px-2.5 py-1 rounded-full text-[11px] font-bold border transition-all" style="background-color: var(--card-bg); border-color: var(--border-subtle); color: var(--accent);">
+                                Keep 📌
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pastel / Kraft Index Care Cards Deck -->
+                <div class="space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-serif-editorial text-lg font-bold">🗂️ Gentle Index Care Cards</h3>
+                            <p class="text-xs" style="color: var(--ink-muted);">Tap any basic self-care card to stamp it done</p>
+                        </div>
+                        <button type="button" onclick="toggleAddCardForm()" class="min-h-[36px] px-3 py-1.5 rounded-full text-xs font-bold text-white shadow-2xs" style="background-color: var(--secondary);">
+                            + Pen a Card
+                        </button>
+                    </div>
+
+                    <!-- Inline Form to Write Your Own Index Card -->
+                    <div id="add-care-card-box" class="hidden rounded-2xl p-3.5 border space-y-2.5 animate-pop" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                        <input id="new-care-card-text" type="text" maxlength="60" placeholder="e.g., Brush hair gently or wash face with warm water..." class="w-full min-h-[42px] px-3 py-2 rounded-xl border text-sm focus:outline-none" style="background-color: var(--bg-soft); border-color: var(--border-subtle); color: var(--ink-main);" />
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-1.5 text-xs">
+                                <span style="color: var(--ink-muted);">Card tint:</span>
+                                <button type="button" onclick="selectNewCardTint('blush')" class="w-6 h-6 rounded-full border-2 border-white shadow-xs" style="background-color: #f9d8e2;" title="Blush"></button>
+                                <button type="button" onclick="selectNewCardTint('butter')" class="w-6 h-6 rounded-full border-2 border-white shadow-xs" style="background-color: #f9ecc6;" title="Buttercream"></button>
+                                <button type="button" onclick="selectNewCardTint('mint')" class="w-6 h-6 rounded-full border-2 border-white shadow-xs" style="background-color: #d6efe2;" title="Mint"></button>
+                                <button type="button" onclick="selectNewCardTint('kraft')" class="w-6 h-6 rounded-full border-2 border-white shadow-xs" style="background-color: #e8d4be;" title="Kraft"></button>
+                            </div>
+                            <button type="button" onclick="addCustomCareCard()" class="min-h-[36px] px-4 py-1.5 rounded-xl text-xs font-bold text-white" style="background-color: var(--accent);">
+                                Pin Card 📌
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="care-cards-list" class="grid grid-cols-1 gap-2.5">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+
+                <!-- 3 Daily 2-Minute Micro-Sparks -->
+                <div class="space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-serif-editorial text-lg font-bold">✨ 3 Gentle 2-Minute Sparks</h3>
+                            <p class="text-xs" style="color: var(--ink-muted);">Complete just 1 for your daily win—or up to 3</p>
+                        </div>
+                        <span id="sparks-done-pill" class="text-xs font-bold px-2.5 py-1 rounded-full" style="background-color: var(--accent-soft); color: var(--accent);">0 / 3 Done</span>
+                    </div>
+                    <div id="daily-sparks-list" class="space-y-2.5">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+
+                <!-- Quick Links to Talk & Cleanse -->
+                <div class="grid grid-cols-2 gap-2.5 pt-1">
+                    <button type="button" onclick="switchTab('talk')" class="p-3.5 rounded-2xl border text-left transition-all hover:scale-[1.01]" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                        <div class="text-xl">💬</div>
+                        <div class="text-xs font-bold mt-1">Talk It Out</div>
+                        <div class="text-[11px]" style="color: var(--ink-muted);">Chat when stuck or lonely</div>
+                    </button>
+                    <button type="button" onclick="switchTab('cleanse')" class="p-3.5 rounded-2xl border text-left transition-all hover:scale-[1.01]" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                        <div class="text-xl">🪶</div>
+                        <div class="text-xs font-bold mt-1">Clean Out Sofa</div>
+                        <div class="text-[11px]" style="color: var(--ink-muted);">Dump heavy thoughts safely</div>
+                    </button>
+                </div>
+            </section>
+
+            <!-- =============================================================
+                 TAB 2: TALK IT OUT ON THE SOFA (STEP 2 COMPANION CORNER)
+                 ============================================================= -->
+            <section id="tab-talk" class="hidden space-y-4 animate-pop">
+                <div class="rounded-[26px] p-4 border shadow-xs space-y-2" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl">🛋️</span>
+                        <div>
+                            <h2 class="font-serif-editorial text-xl font-bold">Talk It Out on the Sofa</h2>
+                            <p class="text-xs" style="color: var(--ink-muted);">Tap how you’re feeling or share what’s weighing on you</p>
+                        </div>
+                    </div>
+
+                    <!-- Quick Feeling Chips -->
+                    <div class="flex flex-wrap gap-1.5 pt-2">
+                        <button type="button" onclick="sendQuickSofaFeeling('stuck')" class="min-h-[34px] px-3 py-1 rounded-full text-xs font-semibold border" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">🧊 Feeling Stuck</button>
+                        <button type="button" onclick="sendQuickSofaFeeling('lonely')" class="min-h-[34px] px-3 py-1 rounded-full text-xs font-semibold border" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">🕯️ Feeling Lonely</button>
+                        <button type="button" onclick="sendQuickSofaFeeling('overwhelmed')" class="min-h-[34px] px-3 py-1 rounded-full text-xs font-semibold border" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">🌊 Overwhelmed</button>
+                        <button type="button" onclick="sendQuickSofaFeeling('bored')" class="min-h-[34px] px-3 py-1 rounded-full text-xs font-semibold border" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">🥱 Bored &amp; Flat</button>
+                        <button type="button" onclick="sendQuickSofaFeeling('tired')" class="min-h-[34px] px-3 py-1 rounded-full text-xs font-semibold border" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">🌧️ Exhausted</button>
+                    </div>
+                </div>
+
+                <!-- Companion Chat Feed -->
+                <div id="sofa-chat-feed" class="space-y-3 max-h-[360px] overflow-y-auto pr-1">
+                    <!-- Rendered by JS -->
+                </div>
+
+                <!-- Custom Message Input -->
+                <div class="rounded-2xl p-3 border flex items-center gap-2" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                    <input id="sofa-chat-input" type="text" maxlength="180" placeholder="Tell me what's on your mind..." class="flex-1 min-h-[42px] px-3 py-2 rounded-xl border text-sm focus:outline-none" style="background-color: var(--bg-soft); border-color: var(--border-subtle); color: var(--ink-main);" onkeydown="if(event.key==='Enter') sendCustomSofaMessage()" />
+                    <button type="button" onclick="sendCustomSofaMessage()" class="min-h-[42px] px-4 py-2 rounded-xl text-xs font-bold text-white shrink-0" style="background-color: var(--accent);">
+                        Share 💬
+                    </button>
+                </div>
+            </section>
+
+            <!-- =============================================================
+                 TAB 3: JOURNAL (COZY STATIONERY & GRATITUDE PAD)
+                 ============================================================= -->
+            <section id="tab-journal" class="hidden space-y-4 animate-pop">
+                <div class="rounded-[26px] p-4 border shadow-xs space-y-3" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                    <div class="flex items-center justify-between gap-2">
+                        <h2 class="font-serif-editorial text-xl font-bold">📖 Sofa Stationery Journal</h2>
+                        <button type="button" onclick="shuffleJournalPrompt()" class="min-h-[32px] px-2.5 py-1 rounded-full text-xs font-bold border" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">
+                            New Prompt ↻
+                        </button>
+                    </div>
+
+                    <div class="p-3 rounded-2xl border text-xs font-semibold" style="background-color: var(--accent-soft); border-color: var(--border-subtle); color: var(--accent);" id="journal-prompt-text">
+                        What is one tiny comfort you enjoyed today, even if it only lasted a minute?
+                    </div>
+
+                    <textarea id="journal-entry-input" rows="3" placeholder="Jot down a thought, a memory, or something you’re grateful for..." class="w-full p-3 rounded-2xl border text-sm leading-relaxed focus:outline-none" style="background-color: var(--bg-soft); border-color: var(--border-subtle); color: var(--ink-main);"></textarea>
+
+                    <div class="flex items-center justify-between gap-2">
+                        <select id="journal-sticker-select" class="min-h-[38px] px-3 rounded-xl border text-xs font-semibold" style="background-color: var(--bg-soft); border-color: var(--border-subtle); color: var(--ink-main);">
+                            <option value="🌸 Soft Moment">🌸 Soft Moment</option>
+                            <option value="☀️ Tiny Win">☀️ Tiny Win</option>
+                            <option value="🍵 Cozy Gratitude">🍵 Cozy Gratitude</option>
+                            <option value="💛 Proud of Myself">💛 Proud of Myself</option>
+                        </select>
+                        <button type="button" onclick="saveJournalEntry()" class="min-h-[38px] px-4 py-2 rounded-xl text-xs font-bold text-white shadow-2xs" style="background-color: var(--accent);">
+                            Save Page ✨
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Saved Memory Pages -->
+                <div class="space-y-2.5">
+                    <h3 class="font-serif-editorial text-base font-bold px-1">Saved Memory Pages</h3>
+                    <div id="journal-entries-list" class="space-y-2.5">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- =============================================================
+                 TAB 4: PLAY & TRACK (HABIT PETALS & BOREDOM-BUSTER JAR)
+                 ============================================================= -->
+            <section id="tab-play" class="hidden space-y-4 animate-pop">
+                <!-- Gentle Habit Petals -->
+                <div class="rounded-[26px] p-4 border shadow-xs space-y-3" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="font-serif-editorial text-xl font-bold">🌿 Gentle Habit Petals</h2>
+                            <p class="text-xs" style="color: var(--ink-muted);">Tap circles to color your week—zero broken-streak guilt</p>
+                        </div>
+                        <button type="button" onclick="openProfileDrawer()" class="text-xs font-bold underline" style="color: var(--accent);">Edit</button>
+                    </div>
+                    <div id="habits-tracker-list" class="space-y-2.5">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+
+                <!-- Boredom-Buster Surprise Jar -->
+                <div class="rounded-[26px] p-4 border shadow-xs space-y-3 text-center" style="background-color: var(--secondary-soft); border-color: var(--border-subtle);">
+                    <div class="text-3xl">🫙✨</div>
+                    <h3 class="font-serif-editorial text-lg font-bold">The Boredom-Buster Surprise Jar</h3>
+                    <p class="text-xs max-w-[320px] mx-auto" style="color: var(--ink-muted);">
+                        Feeling restless, flat, or uninspired? Pull a gentle, zero-cost spark from the jar.
+                    </p>
+                    <div id="boredom-jar-result" class="p-3.5 rounded-2xl border font-serif-editorial text-base font-semibold" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                        “Put on one favorite song from 10 years ago and listen all the way through.”
+                    </div>
+                    <div class="flex items-center justify-center gap-2">
+                        <button type="button" onclick="pullBoredomActivity()" class="min-h-[40px] px-4 py-2 rounded-xl text-xs font-bold text-white shadow-2xs" style="background-color: var(--secondary);">
+                            Pull Another Idea 🎲
+                        </button>
+                        <button type="button" onclick="pinBoredomIdeaToCards()" class="min-h-[40px] px-3.5 py-2 rounded-xl text-xs font-bold border" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                            Add to Cards 📌
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PLUS FEATURE 1: PASS THE THROW BLANKET (ANONYMOUS KINDNESS RELAY) -->
+                <div class="rounded-[26px] p-4 border shadow-xs space-y-3" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                    <div class="flex items-center justify-between gap-2">
+                        <div>
+                            <span class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--accent);">🧶 Sit &amp; Bloom Plus</span>
+                            <h3 class="font-serif-editorial text-lg font-bold">Pass the Throw Blanket</h3>
+                        </div>
+                        <span id="blanket-tier-badge" class="text-[10px] font-bold px-2.5 py-1 rounded-full" style="background-color: var(--accent-soft); color: var(--accent);">✨ Plus Perk</span>
+                    </div>
+                    <p class="text-xs leading-relaxed" style="color: var(--ink-muted);">
+                        Pull a real encouragement note tucked into a throw blanket by another sofa sitter—and leave a single kind sentence behind for someone having a quiet day.
+                    </p>
+
+                    <div id="blanket-locked-box" class="p-3.5 rounded-2xl border text-center space-y-2" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">
+                        <p class="text-xs font-semibold">Unlock the Anonymous Living-Room Kindness Relay &amp; Shared Sofa Cushion with Sit &amp; Bloom Plus.</p>
+                        <button type="button" onclick="openProfileDrawer()" class="min-h-[38px] px-4 py-1.5 rounded-xl text-xs font-bold text-white" style="background-color: var(--accent);">
+                            Explore Sit &amp; Bloom Plus ✨
+                        </button>
+                    </div>
+
+                    <div id="blanket-unlocked-box" class="hidden space-y-3">
+                        <div class="p-3.5 rounded-2xl border space-y-2" style="background-color: var(--accent-soft); border-color: var(--border-subtle);">
+                            <p id="blanket-received-text" class="font-serif-editorial text-sm font-medium leading-relaxed">
+                                “Hey friend on the couch—if all you did today was get out of bed and drink some water, I’m genuinely proud of you.”
+                            </p>
+                            <div class="flex items-center justify-between text-[11px]">
+                                <span id="blanket-received-from" style="color: var(--ink-muted);">— Left on a Loveseat in Oregon</span>
+                                <div class="flex items-center gap-1.5">
+                                    <button type="button" onclick="sendBlanketSqueeze()" class="px-2.5 py-1 rounded-full font-bold border" style="background-color: var(--card-bg); border-color: var(--border-subtle); color: var(--accent);">
+                                        ❤️ Squeeze (<span id="blanket-squeeze-count">14</span>)
+                                    </button>
+                                    <button type="button" onclick="drawNextBlanketNote()" class="px-2.5 py-1 rounded-full font-bold border" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                                        Next ↻
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <input id="blanket-leave-input" type="text" maxlength="110" placeholder="Leave 1 kind sentence for the next sitter..." class="flex-1 min-h-[38px] px-3 rounded-xl border text-xs focus:outline-none" style="background-color: var(--bg-soft); border-color: var(--border-subtle); color: var(--ink-main);" />
+                            <button type="button" onclick="leaveBlanketNote()" class="min-h-[38px] px-3.5 rounded-xl text-xs font-bold text-white shrink-0" style="background-color: var(--secondary);">
+                                Tuck In 🧶
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =============================================================
+                 TAB 5: LISTS (COMFORT GROCERY & NO-PRESSURE TO-DOS)
+                 ============================================================= -->
+            <section id="tab-lists" class="hidden space-y-4 animate-pop">
+                <!-- Grocery & Pantry Pad -->
+                <div class="rounded-[26px] p-4 border shadow-xs space-y-3" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="font-serif-editorial text-xl font-bold">🧺 Comfort Grocery List</h2>
+                            <p class="text-xs" style="color: var(--ink-muted);">Easy staples &amp; gentle nourishment</p>
+                        </div>
+                        <button type="button" onclick="clearCheckedGroceries()" class="text-xs font-bold underline" style="color: var(--accent);">Clear Checked</button>
+                    </div>
+
+                    <div class="flex flex-wrap gap-1.5">
+                        <button type="button" onclick="quickAddGrocery('🍵 Herbal Tea & Honey')" class="px-2.5 py-1 rounded-full text-[11px] font-semibold border" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">+ 🍵 Tea</button>
+                        <button type="button" onclick="quickAddGrocery('🥣 Easy Soup or Broth')" class="px-2.5 py-1 rounded-full text-[11px] font-semibold border" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">+ 🥣 Soup</button>
+                        <button type="button" onclick="quickAddGrocery('🍌 Bananas & Berries')" class="px-2.5 py-1 rounded-full text-[11px] font-semibold border" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">+ 🍌 Fruit</button>
+                        <button type="button" onclick="quickAddGrocery('💧 Sparkling Water')" class="px-2.5 py-1 rounded-full text-[11px] font-semibold border" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">+ 💧 Water</button>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <input id="grocery-input" type="text" maxlength="50" placeholder="Add a grocery item..." class="flex-1 min-h-[40px] px-3 rounded-xl border text-xs focus:outline-none" style="background-color: var(--bg-soft); border-color: var(--border-subtle); color: var(--ink-main);" onkeydown="if(event.key==='Enter') addGroceryItem()" />
+                        <button type="button" onclick="addGroceryItem()" class="min-h-[40px] px-4 rounded-xl text-xs font-bold text-white" style="background-color: var(--secondary);">Add</button>
+                    </div>
+
+                    <div id="grocery-list-items" class="space-y-1.5"></div>
+                </div>
+
+                <!-- No-Pressure Little To-Dos -->
+                <div class="rounded-[26px] p-4 border shadow-xs space-y-3" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-serif-editorial text-lg font-bold">📝 No-Pressure Little To-Dos</h3>
+                            <p class="text-xs" style="color: var(--ink-muted);">Park errands here so your brain can rest</p>
+                        </div>
+                        <button type="button" onclick="clearDoneTodos()" class="text-xs font-bold underline" style="color: var(--accent);">Clear Done</button>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <input id="todo-input" type="text" maxlength="60" placeholder="Add a little task for later..." class="flex-1 min-h-[40px] px-3 rounded-xl border text-xs focus:outline-none" style="background-color: var(--bg-soft); border-color: var(--border-subtle); color: var(--ink-main);" onkeydown="if(event.key==='Enter') addTodoItem()" />
+                        <button type="button" onclick="addTodoItem()" class="min-h-[40px] px-4 rounded-xl text-xs font-bold text-white" style="background-color: var(--accent);">Add</button>
+                    </div>
+
+                    <div id="todo-list-items" class="space-y-1.5"></div>
+                </div>
+            </section>
+
+            <!-- =============================================================
+                 TAB 6: CLEANING OUT THE SOFA (HEAVY THOUGHT DUMP)
+                 ============================================================= -->
+            <section id="tab-cleanse" class="hidden space-y-4 animate-pop">
+                <div id="sofa-cleanse-card" class="rounded-[28px] p-5 border shadow-xs space-y-4 transition-all" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                    <div class="flex items-start justify-between gap-2">
+                        <div>
+                            <span class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--accent);">🪶 Emotional Reset</span>
+                            <h2 class="font-serif-editorial text-2xl font-bold mt-0.5">Cleaning Out the Sofa</h2>
+                        </div>
+                        <span id="fresh-starts-pill" class="text-xs font-bold px-3 py-1 rounded-full" style="background-color: var(--secondary-soft); color: var(--secondary);">0 Fresh Starts</span>
+                    </div>
+
+                    <p class="text-xs leading-relaxed" style="color: var(--ink-muted);">
+                        Tuck everything heavy between the cushions—worries, self-doubt, old regrets, or exhaustion. <strong>Nothing you write here is ever saved.</strong> When you’re ready, we’ll shake the cushions out together.
+                    </p>
+
+                    <!-- Quick Heavy-Feeling Pills -->
+                    <div id="cleanse-weight-pills" class="flex flex-wrap gap-1.5">
+                        <button type="button" onclick="toggleCleansePill(this)" class="cleanse-pill min-h-[34px] px-3 py-1 rounded-full text-xs font-semibold border transition-all" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">Overwhelmed</button>
+                        <button type="button" onclick="toggleCleansePill(this)" class="cleanse-pill min-h-[34px] px-3 py-1 rounded-full text-xs font-semibold border transition-all" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">Lonely</button>
+                        <button type="button" onclick="toggleCleansePill(this)" class="cleanse-pill min-h-[34px] px-3 py-1 rounded-full text-xs font-semibold border transition-all" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">Self-Doubt</button>
+                        <button type="button" onclick="toggleCleansePill(this)" class="cleanse-pill min-h-[34px] px-3 py-1 rounded-full text-xs font-semibold border transition-all" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">Exhausted</button>
+                        <button type="button" onclick="toggleCleansePill(this)" class="cleanse-pill min-h-[34px] px-3 py-1 rounded-full text-xs font-semibold border transition-all" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">Anxious</button>
+                        <button type="button" onclick="toggleCleansePill(this)" class="cleanse-pill min-h-[34px] px-3 py-1 rounded-full text-xs font-semibold border transition-all" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">Unmotivated</button>
+                    </div>
+
+                    <!-- Ephemeral Dump Textarea -->
+                    <textarea id="cleanse-dump-input" rows="4" placeholder="Let it all out here... nobody else will ever read this, and it disappears completely when you shake the cushions..." class="w-full p-3.5 rounded-2xl border text-sm leading-relaxed focus:outline-none transition-opacity" style="background-color: var(--bg-soft); border-color: var(--border-subtle); color: var(--ink-main);"></textarea>
+
+                    <button type="button" onclick="shakeOutSofaCushions()" class="w-full min-h-[46px] px-4 py-3 rounded-2xl text-sm font-bold text-white shadow-sm active:scale-[0.98] transition-all" style="background-color: var(--accent);">
+                        Shake Out the Cushions &amp; Let It Go 🌬️✨
+                    </button>
+
+                    <!-- Post-Cleanse Fresh Cushion Message -->
+                    <div id="cleanse-afterglow-box" class="hidden p-4 rounded-2xl border space-y-2 animate-pop" style="background-color: var(--secondary-soft); border-color: var(--border-subtle);">
+                        <div class="text-sm font-bold" style="color: var(--secondary);">✨ Fresh Cushions &amp; Sunlight (+1 Blossom Earned!)</div>
+                        <p id="cleanse-afterglow-text" class="text-xs leading-relaxed">
+                            All that weight has been shaken out into the open air. Take one deep breath—you’re starting fresh right now.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =============================================================
+                 TAB 7: DREAM PATH & TREASURE BOX (REWARDS & ACCOUNTABILITY)
+                 ============================================================= -->
+            <section id="tab-dream" class="hidden space-y-4 animate-pop">
+                <div class="rounded-[26px] p-4 border shadow-xs space-y-3" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                    <div class="flex items-center justify-between">
+                        <span id="dream-path-kicker" class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--accent);">🌸 5-Blossom Dream Path</span>
+                        <span id="blossom-count-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full" style="background-color: var(--accent-soft); color: var(--accent);">1 / 5 Lit</span>
+                    </div>
+
+                    <h2 id="current-goal-title" class="font-serif-editorial text-xl font-bold">
+                        Enjoy simple daily moments with a calmer, lighter heart
+                    </h2>
+
+                    <!-- 5 Glowing Stepping Stones -->
+                    <div id="blossom-stones-row" class="grid grid-cols-5 gap-2 py-2">
+                        <!-- Rendered by JS -->
+                    </div>
+
+                    <p class="text-xs leading-relaxed" style="color: var(--ink-muted);">
+                        Every index care card, micro-spark, 5 sips of your drink, or sofa cleanse lights one blossom. Light all 5 to unlock a permanent Keepsake Charm!
+                    </p>
+
+                    <div class="flex gap-2 pt-1">
+                        <button type="button" onclick="advanceBlossomProgress(1)" class="flex-1 min-h-[40px] px-3 py-2 rounded-xl text-xs font-bold text-white shadow-2xs" style="background-color: var(--accent);">
+                            Light 1 Step ✨
+                        </button>
+                        <button type="button" onclick="promptNewGoal()" class="min-h-[40px] px-3.5 py-2 rounded-xl text-xs font-bold border" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">
+                            Change Dream ✏️
+                        </button>
+                    </div>
+
+                    <!-- Inline Goal Editor -->
+                    <div id="goal-editor-box" class="hidden pt-2 flex gap-2">
+                        <input id="custom-goal-input" type="text" maxlength="80" placeholder="Write a gentle goal you'd love to finish..." class="flex-1 min-h-[40px] px-3 rounded-xl border text-xs" style="background-color: var(--bg-soft); border-color: var(--border-subtle); color: var(--ink-main);" />
+                        <button type="button" onclick="saveCustomGoal()" class="min-h-[40px] px-3.5 rounded-xl text-xs font-bold text-white" style="background-color: var(--secondary);">Save</button>
+                    </div>
+                </div>
+
+                <!-- Keepsake Treasure Box -->
+                <div class="rounded-[26px] p-4 border shadow-xs space-y-2.5" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                    <h3 id="treasure-box-heading" class="font-serif-editorial text-lg font-bold">🎁 Velvet Treasure Box</h3>
+                    <div id="keepsakes-shelf-list" class="space-y-2">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+
+                <!-- FREE FEATURE 2: TIME-CAPSULE ENVELOPE UNDER THE CUSHION -->
+                <div class="rounded-[26px] p-4 border shadow-xs space-y-3" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--accent);">✉️ Free Time Capsule</span>
+                            <h3 class="font-serif-editorial text-lg font-bold">Envelope Under the Cushion</h3>
+                        </div>
+                        <span id="capsule-count-pill" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full" style="background-color: var(--accent-soft); color: var(--accent);">1 Sealed</span>
+                    </div>
+                    <p class="text-xs leading-relaxed" style="color: var(--ink-muted);">
+                        Having a good moment right now? Tuck a short note under the sofa cushion so you can pull it out on a future low-energy day.
+                    </p>
+                    <div class="flex gap-2">
+                        <input id="capsule-note-input" type="text" maxlength="140" placeholder="Write a note to Future-You on a tough day..." class="flex-1 min-h-[40px] px-3 rounded-xl border text-xs focus:outline-none" style="background-color: var(--bg-soft); border-color: var(--border-subtle); color: var(--ink-main);" />
+                        <button type="button" onclick="tuckCapsuleEnvelope()" class="min-h-[40px] px-3.5 rounded-xl text-xs font-bold text-white shrink-0" style="background-color: var(--accent);">
+                            Seal ✉️
+                        </button>
+                    </div>
+                    <button type="button" onclick="openRandomCapsuleEnvelope()" class="w-full min-h-[40px] px-4 py-2 rounded-xl text-xs font-bold border" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">
+                        Reach Under the Cushion &amp; Open a Past Note 💌
+                    </button>
+                    <div id="capsule-opened-card" class="hidden p-3.5 rounded-2xl border space-y-1 animate-pop" style="background-color: var(--accent-soft); border-color: var(--border-subtle);">
+                        <div class="text-[10px] font-bold uppercase tracking-wider" style="color: var(--accent);" id="capsule-opened-date">From Past-You</div>
+                        <p id="capsule-opened-text" class="font-serif-editorial text-sm font-medium leading-relaxed"></p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- =================================================================
+             STICKY BOTTOM NAVIGATION BAR
+             ================================================================= -->
+        <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-30 px-2 py-2 border-t backdrop-blur-md" style="background-color: color-mix(in srgb, var(--bg-main) 92%, transparent); border-color: var(--border-subtle);">
+            <div class="grid grid-cols-7 gap-1">
+                <button type="button" onclick="switchTab('today')" id="nav-today" class="nav-btn py-1.5 rounded-xl flex flex-col items-center justify-center text-[10px] font-bold transition-all">
+                    <span class="text-base">🛋️</span>
+                    <span>Today</span>
+                </button>
+                <button type="button" onclick="switchTab('talk')" id="nav-talk" class="nav-btn py-1.5 rounded-xl flex flex-col items-center justify-center text-[10px] font-bold transition-all">
+                    <span class="text-base">💬</span>
+                    <span>Talk</span>
+                </button>
+                <button type="button" onclick="switchTab('journal')" id="nav-journal" class="nav-btn py-1.5 rounded-xl flex flex-col items-center justify-center text-[10px] font-bold transition-all">
+                    <span class="text-base">📖</span>
+                    <span>Journal</span>
+                </button>
+                <button type="button" onclick="switchTab('play')" id="nav-play" class="nav-btn py-1.5 rounded-xl flex flex-col items-center justify-center text-[10px] font-bold transition-all">
+                    <span class="text-base">🌿</span>
+                    <span>Play</span>
+                </button>
+                <button type="button" onclick="switchTab('lists')" id="nav-lists" class="nav-btn py-1.5 rounded-xl flex flex-col items-center justify-center text-[10px] font-bold transition-all">
+                    <span class="text-base">🧺</span>
+                    <span>Lists</span>
+                </button>
+                <button type="button" onclick="switchTab('cleanse')" id="nav-cleanse" class="nav-btn py-1.5 rounded-xl flex flex-col items-center justify-center text-[10px] font-bold transition-all">
+                    <span class="text-base">🪶</span>
+                    <span>Cleanse</span>
+                </button>
+                <button type="button" onclick="switchTab('dream')" id="nav-dream" class="nav-btn py-1.5 rounded-xl flex flex-col items-center justify-center text-[10px] font-bold transition-all">
+                    <span class="text-base">🌸</span>
+                    <span>Dream</span>
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <!-- =====================================================================
+         STEP 3: MY SOFA CORNER — PERSONALIZATION & KEEPSAKE DRAWER
+         ===================================================================== -->
+    <div id="profile-drawer-modal" class="fixed inset-0 z-50 hidden flex items-end sm:items-center justify-center p-3 sm:p-4" style="background-color: rgba(20, 14, 12, 0.62); backdrop-filter: blur(4px);">
+        <div class="w-full max-w-[440px] max-h-[88vh] overflow-y-auto rounded-[28px] p-5 border shadow-2xl space-y-4 animate-pop" style="background-color: var(--bg-soft); border-color: var(--border-subtle); color: var(--ink-main);">
+            <div class="flex items-center justify-between gap-2 border-b pb-3" style="border-color: var(--border-subtle);">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">🪴</span>
+                    <div>
+                        <h3 class="font-serif-editorial text-xl font-bold leading-tight">My Sofa Corner</h3>
+                        <p class="text-xs" style="color: var(--ink-muted);">Make this living room unmistakably yours</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeProfileDrawer()" class="min-h-[38px] min-w-[38px] rounded-full border text-sm font-bold flex items-center justify-center" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                    ✕
+                </button>
+            </div>
+
+            <!-- 1. Your Sofa Nameplate -->
+            <div class="rounded-2xl p-4 border space-y-3" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                <div class="text-xs font-bold uppercase tracking-wider" style="color: var(--accent);">1. Your Sofa Nameplate</div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                        <label for="profile-user-name" class="block text-xs font-semibold mb-1" style="color: var(--ink-muted);">What should I call you?</label>
+                        <input id="profile-user-name" type="text" maxlength="24" placeholder="e.g., Clara or Sam" class="w-full min-h-[40px] px-3 py-2 rounded-xl border text-sm focus:outline-none" style="background-color: var(--bg-soft); border-color: var(--border-subtle); color: var(--ink-main);" />
+                    </div>
+                    <div>
+                        <label for="profile-companion-name" class="block text-xs font-semibold mb-1" style="color: var(--ink-muted);">Companion's Name</label>
+                        <input id="profile-companion-name" type="text" maxlength="24" placeholder="e.g., Future You or Sunny" class="w-full min-h-[40px] px-3 py-2 rounded-xl border text-sm focus:outline-none" style="background-color: var(--bg-soft); border-color: var(--border-subtle); color: var(--ink-main);" />
+                    </div>
+                </div>
+                <button type="button" onclick="saveProfileNames()" class="w-full min-h-[40px] px-4 py-2 rounded-xl text-xs font-bold text-white" style="background-color: var(--accent);">
+                    Save My Nameplate ✨
+                </button>
+            </div>
+
+            <!-- 2. Custom Habit Petals -->
+            <div class="rounded-2xl p-4 border space-y-3" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                <div class="text-xs font-bold uppercase tracking-wider" style="color: var(--secondary);">2. Custom Habit Petals</div>
+                <div id="custom-habits-manage-list" class="space-y-1.5"></div>
+                <div class="flex items-center gap-2 pt-1">
+                    <select id="new-habit-icon" class="min-h-[40px] px-2 rounded-xl border text-base" style="background-color: var(--bg-soft); border-color: var(--border-subtle); color: var(--ink-main);">
+                        <option value="🌸">🌸</option>
+                        <option value="💧">💧</option>
+                        <option value="📖">📖</option>
+                        <option value="🚶">🚶</option>
+                        <option value="🎵">🎵</option>
+                        <option value="☀️">☀️</option>
+                        <option value="💊">💊</option>
+                    </select>
+                    <input id="new-habit-label" type="text" maxlength="28" placeholder="Add a gentle daily habit..." class="flex-1 min-h-[40px] px-3 py-2 rounded-xl border text-xs focus:outline-none" style="background-color: var(--bg-soft); border-color: var(--border-subtle); color: var(--ink-main);" />
+                    <button type="button" onclick="addCustomHabit()" class="min-h-[40px] px-3 py-2 rounded-xl text-xs font-bold text-white" style="background-color: var(--secondary);">+ Add</button>
+                </div>
+            </div>
+
+            <!-- 3. Fresh Morning Index Card Reset & Keepsake Export -->
+            <div class="rounded-2xl p-4 border space-y-2.5" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                <div class="text-xs font-bold uppercase tracking-wider" style="color: var(--accent);">3. Fresh Day &amp; Keepsakes</div>
+                <button type="button" onclick="resetDailyCareCards()" class="w-full min-h-[40px] px-4 py-2 rounded-xl text-xs font-bold border" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">
+                    Unstamp Cards for a Fresh Day 🗂️
+                </button>
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" onclick="copyKeepsakeSummary()" class="min-h-[40px] px-3 py-2 rounded-xl text-xs font-bold border" style="background-color: var(--bg-soft); border-color: var(--border-subtle);">
+                        Copy Keepsake 📋
+                    </button>
+                    <button type="button" onclick="printKeepsakeBook()" class="min-h-[40px] px-3 py-2 rounded-xl text-xs font-bold text-white" style="background-color: var(--accent);">
+                        Print Book 🖨️
+                    </button>
+                </div>
+                <p id="keepsake-export-status" class="hidden text-center text-xs font-semibold pt-1" style="color: var(--secondary);"></p>
+            </div>
+
+            <!-- 4. Sit & Bloom Plus Membership & Pocket Sofa-Share Link (PLUS FEATURE 2) -->
+            <div class="rounded-2xl p-4 border space-y-3" style="background-color: var(--accent-soft); border-color: var(--border-subtle);">
+                <div class="flex items-center justify-between">
+                    <div class="text-xs font-bold uppercase tracking-wider" style="color: var(--accent);">4. Sit &amp; Bloom Plus ✨</div>
+                    <button type="button" onclick="togglePlusMembershipPreview()" id="plus-preview-toggle-btn" class="px-2.5 py-1 rounded-full text-[11px] font-bold border" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                        Preview Plus: OFF
+                    </button>
+                </div>
+                <p class="text-xs leading-relaxed">
+                    Support the sanctuary and unlock <strong>Pass the Throw Blanket 🧶</strong> (anonymous kindness relay) and <strong>Pocket Sofa-Share 🛋️</strong> (invite a friend onto the other cushion).
+                </p>
+
+                <!-- Pocket Sofa-Share Link Box -->
+                <div id="sofa-share-member-box" class="p-3 rounded-xl border space-y-2" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+                    <div class="text-xs font-bold">🛋️ Pocket Sofa-Share (Other Cushion Link)</div>
+                    <p class="text-[11px]" style="color: var(--ink-muted);">
+                        Send a friend or partner your personalized sofa link so they can pull up the cushion right beside you.
+                    </p>
+                    <button type="button" onclick="copyPocketSofaShareLink()" class="w-full min-h-[38px] px-3 py-1.5 rounded-xl text-xs font-bold text-white" style="background-color: var(--secondary);">
+                        Copy “Sit on My Other Cushion” Link 🔗
+                    </button>
+                    <p id="sofa-share-status" class="hidden text-center text-[11px] font-bold" style="color: var(--secondary);"></p>
+                </div>
+
+                <a href="https://ko-fi.com" target="_blank" rel="noopener" class="block w-full text-center min-h-[40px] leading-[40px] rounded-xl text-xs font-bold text-white shadow-2xs" style="background-color: var(--accent);">
+                    Upgrade to Sit &amp; Bloom Plus ($4.99/mo) ☕
+                </a>
+                <p class="text-[10px] leading-snug opacity-80">
+                    Self-Care Disclaimer: Sit &amp; Bloom is a gentle daily reflection and self-care companion, not a substitute for licensed medical or mental health therapy.
+                </p>
+            </div>
+
+            <!-- 5. Install on Phone Home Screen Guide -->
+            <div class="rounded-2xl p-4 border space-y-1.5" style="background-color: var(--secondary-soft); border-color: var(--border-subtle);">
+                <div class="text-xs font-bold uppercase tracking-wider" style="color: var(--secondary);">5. Add to Phone Home Screen 📲</div>
+                <p class="text-xs leading-relaxed">
+                    <strong>iPhone (Safari):</strong> Tap the <strong>Share</strong> icon, then choose <strong>“Add to Home Screen”</strong>.<br>
+                    <strong>Android (Chrome):</strong> Tap the <strong>⋮ menu</strong>, then choose <strong>“Add to Home screen”</strong> or <strong>“Install app”</strong>.
+                </p>
+            </div>
+
+            <!-- 6. Return to Seat Selection -->
+            <button type="button" onclick="returnToSeatSelection()" class="w-full min-h-[38px] text-xs font-semibold underline opacity-80">
+                ← Go back to Opening Sofa Selection Screen
+            </button>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         DREAM COMPLETION KEEPSAKE CELEBRATION MODAL
+         ===================================================================== -->
+    <div id="keepsake-celebration-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4" style="background-color: rgba(20, 14, 12, 0.65); backdrop-filter: blur(4px);">
+        <div class="w-full max-w-[380px] rounded-[30px] p-6 border text-center space-y-4 shadow-2xl animate-pop" style="background-color: var(--card-bg); border-color: var(--border-subtle);">
+            <div class="text-5xl">🏆✨</div>
+            <h3 class="font-serif-editorial text-2xl font-bold">You Lit All 5 Steps!</h3>
+            <p id="celebration-keepsake-note" class="text-xs leading-relaxed" style="color: var(--ink-muted);">
+                Look at that steady, gentle momentum. A brand-new Keepsake Charm has been placed inside your Treasure Box.
+            </p>
+            <button type="button" onclick="closeCelebrationModal()" class="w-full min-h-[44px] rounded-2xl text-sm font-bold text-white shadow-sm" style="background-color: var(--accent);">
+                Tuck Into My Treasure Box 🎁
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // =================================================================
+        // 1. STATE & PERSISTENCE
+        // =================================================================
+        const STORAGE_KEY = 'sit_and_bloom_v1_clean';
+
+        const defaultState = {
+            onboarded: false,
+            seat: 'loveseat', // 'loveseat' | 'lazboy'
+            lampMode: false,
+            activeTab: 'today',
+            userName: '',
+            companionName: '',
+            moodIndex: 0,
+            drink: 'tea',
+            drinkSips: 1,
+            soundscape: 'off',
+            currentLoveNoteText: '“You don’t have to fix your whole life this afternoon. Just sitting here and breathing is a brave start.”',
+            seenLoveNoteHashes: [101],
+            newCardTint: 'blush',
+            careCards: [
+                { id: 'cc-1', text: 'Brush teeth — even 30 seconds counts ✨', tint: 'blush', done: false },
+                { id: 'cc-2', text: 'Take a warm bath or sit in a steamy shower 🛁', tint: 'mint', done: false },
+                { id: 'cc-3', text: 'Put on fresh, clean, comfy clothes or socks 🧦', tint: 'butter', done: false },
+                { id: 'cc-4', text: 'Wash face with warm water & take a slow breath 🫧', tint: 'kraft', done: false }
+            ],
+            sparks: [
+                { id: 'sp-1', text: 'Open a window or step onto the porch for 60 seconds of fresh air', done: false },
+                { id: 'sp-2', text: 'Tidy just ONE square foot on a table or nightstand', done: false },
+                { id: 'sp-3', text: 'Send a 1-sentence hello to someone you care about', done: false }
+            ],
+            chatMessages: [
+                { sender: 'companion', text: 'Pull up a cushion right next to me. You don’t have to pretend to feel energetic today—what’s on your mind?', spark: 'Drink half a glass of cool water slowly' }
+            ],
+            journalPromptIdx: 0,
+            journalEntries: [
+                {
+                    id: 'je-1',
+                    sticker: '🍵 Cozy Gratitude',
+                    prompt: 'What is one tiny comfort you enjoyed today?',
+                    text: 'Sitting down with a warm mug and giving myself permission to take things slowly.',
+                    date: 'Today'
+                }
+            ],
+            habits: [
+                { id: 'h-1', icon: '💧', label: 'Sip Water or Tea', days: [true, true, false, false, false, false, false] },
+                { id: 'h-2', icon: '🌿', label: '5 Mins Fresh Air', days: [true, false, false, false, false, false, false] },
+                { id: 'h-3', icon: '💊', label: 'Meds / Vitamins', days: [true, true, false, false, false, false, false] },
+                { id: 'h-4', icon: '🌙', label: 'Gentle Bedtime Wind-Down', days: [false, false, false, false, false, false, false] }
+            ],
+            boredomIdx: 0,
+            groceries: [
+                { id: 'g-1', text: '🍵 Chamomile Tea & Honey', checked: false },
+                { id: 'g-2', text: '🍓 Fresh Fruit for an Easy Snack', checked: false }
+            ],
+            todos: [
+                { id: 't-1', text: 'Pick up prescription or mail when ready', done: false }
+            ],
+            freshStarts: 0,
+            blossomProgress: 1,
+            goalText: 'Enjoy simple daily moments with a calmer, lighter heart',
+            keepsakes: [],
+            isPlusMember: false,
+            bodyDoubleMinutes: 5,
+            blanketNoteIdx: 0,
+            blanketSqueezes: 14,
+            customBlanketNotes: [
+                { text: '“Hey friend on the couch—if all you did today was get out of bed and drink some water, I’m genuinely proud of you.”', from: 'Left on a Loveseat in Oregon', squeezes: 14 },
+                { text: '“You don’t have to figure out the next five years tonight. Just take care of the next ten minutes.”', from: 'Left on a La-Z-Boy in Georgia', squeezes: 21 },
+                { text: '“Sending a warm blanket wrap to whoever feels lonely right now. You matter more than you know.”', from: 'Left on a Loveseat in Ohio', squeezes: 19 }
+            ],
+            timeCapsules: [
+                { id: 'tc-1', text: 'Remember that quiet morning with your warm mug when things felt peaceful? That calm is still inside you whenever you need it.', date: 'From a Good Day' }
+            ]
+        };
+
+        let state = loadState();
+
+        function loadState() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return JSON.parse(JSON.stringify(defaultState));
+                return Object.assign(JSON.parse(JSON.stringify(defaultState)), JSON.parse(raw));
+            } catch (e) {
+                return JSON.parse(JSON.stringify(defaultState));
+            }
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            } catch (e) {}
+        }
+
+        function escapeHtml(str) {
+            return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function triggerSparkBurst(emoji) {
+            const el = document.createElement('div');
+            el.className = 'spark-burst-el';
+            el.textContent = emoji || '✨';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 920);
+        }
+
+        // =================================================================
+        // 2. CATALOGS & 400,000+ POSITIVE MESSAGE ENGINE
+        // =================================================================
+        const moodsList = [
+            { emoji: '🍵', label: 'Warm Tea' },
+            { emoji: '🧸', label: 'Low Battery' },
+            { emoji: '🌤️', label: 'Soft Hope' },
+            { emoji: '🌿', label: 'Grounded' },
+            { emoji: '🕯️', label: 'Quiet Rest' }
+        ];
+
+        const drinkCatalog = {
+            tea: { emoji: '🍵', name: 'Warm Chamomile Tea', note: 'Take a slow sip whenever you need a pause.' },
+            coffee: { emoji: '☕', name: 'Fresh Brewed Coffee', note: 'Warm mug in hand—no hurry at all.' },
+            cocoa: { emoji: '🍫', name: 'Whipped Hot Cocoa', note: 'A little sweetness just for showing up.' },
+            lemonade: { emoji: '🍋', name: 'Chilled Honey Lemonade', note: 'Crisp, bright, and refreshing.' }
+        };
+
+        const cardTints = {
+            blush: { bg: '#fff5f8', border: '#ecc4d0', ink: '#4a2c35' },
+            butter: { bg: '#fffbeb', border: '#ebd79e', ink: '#4a3d1f' },
+            mint: { bg: '#f2faf6', border: '#b8decb', ink: '#254436' },
+            kraft: { bg: '#f7efe6', border: '#d6bea4', ink: '#3d2a1d' }
+        };
+
+        const sparkPool = [
+            'Stretch your shoulders back and take 3 slow breaths',
+            'Drink 4 full sips of water or warm tea right now',
+            'Clear just 3 items off your nightstand or desk',
+            'Step outside or look out a window at the sky for 60 seconds',
+            'Put on clean socks or wash your face with warm water',
+            'Write down 1 thing you do not have to worry about tonight',
+            'Listen to 1 favorite comfort song from start to finish',
+            'Send a quick heart emoji or kind text to someone you miss'
+        ];
+
+        const journalPrompts = [
+            'What is one tiny comfort you enjoyed today, even if it only lasted a minute?',
+            'If a close friend felt the exact way you feel right now, what gentle thing would you say to them?',
+            'What is one small thing you handled this week that deserves a quiet nod of credit?',
+            'What would make tonight feel 10% softer and more restful for you?',
+            'Name three simple things around your room right now that bring a little peace.'
+        ];
+
+        const boredomIdeas = [
+            'Put on one favorite song from 10 years ago and listen all the way through.',
+            'Make a fancy iced or warm drink using whatever is already in your kitchen.',
+            'Doodle simple stars, leaves, or spirals on a scrap of paper for 2 minutes.',
+            'Step outside for 3 minutes and notice 3 sounds and 3 colors.',
+            'Pick 5 old photos on your phone that make you smile and favorite them.',
+            'Do a slow 60-second neck and shoulder roll while seated on the sofa.'
+        ];
+
+        const messageSegments = {
+            openersLove: [
+                'Pull the throw blanket a little closer—',
+                'You don’t have to carry the whole week on your shoulders today;',
+                'Even on days when your energy feels like a whisper,',
+                'Right here on the loveseat, there is zero rush—',
+                'Take a soft breath right where you are;',
+                'You are allowed to move at a gentle, human pace today—',
+                'Nothing about your worth is measured by how fast you move;',
+                'If all you did today was keep going quietly,',
+                'Let your shoulders drop away from your ears for a second;',
+                'You don’t need to have everything figured out tonight—'
+            ],
+            openersLazboy: [
+                'Lean back and take the weight off your feet—',
+                'You don’t have to solve the whole month in one afternoon;',
+                'Even when the tank feels close to empty,',
+                'Right here in your corner, there’s zero pressure to perform—',
+                'Take a steady breath and give yourself a break;',
+                'Progress doesn’t have to be loud or dramatic to count—',
+                'You’re allowed to set the heavy stuff down for a bit;',
+                'If all you managed today was showing up and breathing,',
+                'Unclench your jaw and let the room be quiet for a moment;',
+                'You don’t have to fix everything before bedtime—'
+            ],
+            middles: [
+                'one tiny act of care for yourself is already enough.',
+                'small, quiet steps still move your life forward.',
+                'resting when you’re tired is wisdom, not falling behind.',
+                'you have survived 100% of your hardest days so far.',
+                'even a 2-minute pause can reset the entire tone of your day.',
+                'being gentle with yourself creates room for real strength to grow.',
+                'your future self will thank you for the kindness you show yourself right now.',
+                'you deserve the same patience you so freely give to others.',
+                'starting small is infinitely better than staying frozen in perfectionism.',
+                'peace begins the moment you stop fighting how tired you feel.'
+            ],
+            closings: [
+                'I’m right here beside you.',
+                'Take the next ten minutes one easy breath at a time.',
+                'You are doing better than your worried thoughts tell you.',
+                'Tonight, let “good enough” truly be enough.',
+                'There is always a fresh start waiting whenever you need one.',
+                'You are not alone on this couch.',
+                'Be proud of every small thing you did to care for yourself today.',
+                'Tomorrow doesn’t need to be solved right now.'
+            ]
+        };
+
+        function generateUniquePositiveNote() {
+            const openers = state.seat === 'loveseat' ? messageSegments.openersLove : messageSegments.openersLazboy;
+            for (let attempt = 0; attempt < 25; attempt++) {
+                const i1 = Math.floor(Math.random() * openers.length);
+                const i2 = Math.floor(Math.random() * messageSegments.middles.length);
+                const i3 = Math.floor(Math.random() * messageSegments.closings.length);
+                const hash = i1 * 10000 + i2 * 100 + i3 + (state.seat === 'loveseat' ? 0 : 500000);
+                if (!state.seenLoveNoteHashes.includes(hash) || attempt === 24) {
+                    state.seenLoveNoteHashes.push(hash);
+                    if (state.seenLoveNoteHashes.length > 500) state.seenLoveNoteHashes.shift();
+                    return `“${openers[i1]} ${messageSegments.middles[i2]} ${messageSegments.closings[i3]}”`;
+                }
+            }
+            return state.currentLoveNoteText;
+        }
+
+        function drawFreshLoveNote() {
+            state.currentLoveNoteText = generateUniquePositiveNote();
+            saveState();
+            renderAll();
+            triggerSparkBurst('💌');
+        }
+
+        function saveCurrentLoveNoteToJournal() {
+            state.journalEntries.unshift({
+                id: 'je-' + Date.now(),
+                sticker: '💌 Saved Sofa Note',
+                prompt: 'A note tucked beside me',
+                text: state.currentLoveNoteText,
+                date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+            });
+            saveState();
+            renderJournal();
+            triggerSparkBurst('📌');
+        }
+
+        // =================================================================
+        // 3. SEAT THEME, LAMP MODE, SIDE TABLE & SOUNDSCAPES
+        // =================================================================
+        function chooseSeatAndEnter(seatChoice) {
+            state.seat = seatChoice;
+            state.onboarded = true;
+            state.currentLoveNoteText = generateUniquePositiveNote();
+            saveState();
+            renderAll();
+            triggerSparkBurst(seatChoice === 'loveseat' ? '🌷' : '🔥');
+        }
+
+        function returnToSeatSelection() {
+            closeProfileDrawer();
+            state.onboarded = false;
+            saveState();
+            renderAll();
+        }
+
+        function toggleSeatTheme() {
+            state.seat = state.seat === 'loveseat' ? 'lazboy' : 'loveseat';
+            saveState();
+            renderAll();
+            triggerSparkBurst(state.seat === 'loveseat' ? '🌷' : '🪵');
+        }
+
+        function toggleLampMode() {
+            state.lampMode = !state.lampMode;
+            saveState();
+            renderAll();
+            triggerSparkBurst(state.lampMode ? '🪔' : '☀️');
+        }
+
+        function cycleMoodQuickly() {
+            state.moodIndex = ((state.moodIndex || 0) + 1) % moodsList.length;
+            saveState();
+            renderAll();
+        }
+
+        function selectDrink(drinkKey) {
+            state.drink = drinkKey;
+            saveState();
+            renderSideTable();
+        }
+
+        function takeDrinkSip() {
+            state.drinkSips = (state.drinkSips || 0) + 1;
+            triggerSparkBurst(drinkCatalog[state.drink]?.emoji || '🍵');
+            if (state.drinkSips >= 5) {
+                state.drinkSips = 0;
+                advanceBlossomProgress(1);
+            }
+            saveState();
+            renderSideTable();
+        }
+
+        // Procedural Web Audio API Living-Room Soundscapes
+        let audioCtx = null;
+        let activeSoundNode = null;
+
+        function setSoundscape(mode) {
+            state.soundscape = mode;
+            saveState();
+            renderSideTable();
+            stopSoundscape();
+            if (mode === 'off') return;
+
+            try {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContextClass) return;
+                if (!audioCtx) audioCtx = new AudioContextClass();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const bufferSize = audioCtx.sampleRate * 2;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    const white = Math.random() * 2 - 1;
+                    if (mode === 'fire') {
+                        data[i] = Math.random() > 0.996 ? white * 0.65 : white * 0.04;
+                    } else if (mode === 'rain') {
+                        data[i] = white * 0.12;
+                    } else {
+                        data[i] = Math.sin(i * 0.015) * 0.04 + white * 0.025;
+                    }
+                }
+
+                const source = audioCtx.createBufferSource();
+                source.buffer = buffer;
+                source.loop = true;
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = mode === 'rain' ? 950 : (mode === 'fire' ? 680 : 320);
+
+                const gain = audioCtx.createGain();
+                gain.gain.value = 0.22;
+
+                source.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+                source.start();
+                activeSoundNode = source;
+            } catch (e) {}
+        }
+
+        function stopSoundscape() {
+            if (activeSoundNode) {
+                try { activeSoundNode.stop(); } catch (e) {}
+                activeSoundNode = null;
+            }
+        }
+
+        // =================================================================
+        // 4. CARE CARDS, MICRO-SPARKS & TALK IT OUT ON THE SOFA
+        // =================================================================
+        function toggleAddCardForm() {
+            document.getElementById('add-care-card-box').classList.toggle('hidden');
+        }
+
+        function selectNewCardTint(tint) {
+            state.newCardTint = tint;
+            saveState();
+        }
+
+        function addCustomCareCard() {
+            const input = document.getElementById('new-care-card-text');
+            const text = input.value.trim();
+            if (!text) return;
+            state.careCards.unshift({
+                id: 'cc-' + Date.now(),
+                text,
+                tint: state.newCardTint || 'blush',
+                done: false
+            });
+            input.value = '';
+            document.getElementById('add-care-card-box').classList.add('hidden');
+            saveState();
+            renderCareCards();
+            triggerSparkBurst('📌');
+        }
+
+        function toggleCareCard(id) {
+            const card = state.careCards.find(c => c.id === id);
+            if (!card) return;
+            card.done = !card.done;
+            saveState();
+            renderCareCards();
+            if (card.done) {
+                triggerSparkBurst('✨');
+                advanceBlossomProgress(1);
+            }
+        }
+
+        function toggleSparkDone(id) {
+            const sp = state.sparks.find(s => s.id === id);
+            if (!sp) return;
+            sp.done = !sp.done;
+            saveState();
+            renderSparks();
+            if (sp.done) {
+                triggerSparkBurst('🌟');
+                advanceBlossomProgress(1);
+            }
+        }
+
+        function swapSpark(id) {
+            const sp = state.sparks.find(s => s.id === id);
+            if (!sp) return;
+            const candidates = sparkPool.filter(txt => !state.sparks.some(existing => existing.text === txt));
+            sp.text = candidates[Math.floor(Math.random() * candidates.length)] || sparkPool[0];
+            sp.done = false;
+            saveState();
+            renderSparks();
+        }
+
+        const companionReplies = {
+            stuck: {
+                user: 'I’m feeling really stuck right now.',
+                reply: 'Task paralysis is so real, and it does NOT mean you’re lazy—it just means your nervous system is overloaded. Let’s shrink the world down to one tiny 2-minute motion together.',
+                spark: 'Stand up, stretch both arms overhead, and take 3 slow breaths'
+            },
+            lonely: {
+                user: 'I’m feeling pretty lonely today.',
+                reply: 'I’m glad you pulled up a cushion here instead of sitting with that ache all by yourself. Even quiet company counts—let’s warm up the room and do one gentle thing side by side.',
+                spark: 'Make a warm mug of tea or cocoa and sit with it for 3 minutes'
+            },
+            overwhelmed: {
+                user: 'Everything feels overwhelming right now.',
+                reply: 'When everything screams for attention at once, you’re allowed to drop the whole list except one tiny square foot right in front of you. You don’t have to solve tonight’s problems this minute.',
+                spark: 'Clear just 3 things off the closest table or counter'
+            },
+            bored: {
+                user: 'I feel bored, flat, and unmotivated.',
+                reply: 'That flat, restless feeling usually means your brain wants a tiny spark of novelty without heavy effort. Let’s try something low-pressure just to wake up your senses.',
+                spark: 'Open a window for fresh air and play 1 throwback song'
+            },
+            tired: {
+                user: 'I’m completely exhausted.',
+                reply: 'Then let’s take every expectation off the table right now. Resting is real repair work—drink a few sips of water and give yourself permission to recharge guilt-free.',
+                spark: 'Sip water slowly and rest your eyes for 5 minutes'
+            }
+        };
+
+        function sendQuickSofaFeeling(key) {
+            const item = companionReplies[key];
+            if (!item) return;
+            state.chatMessages.push({ sender: 'user', text: item.user });
+            state.chatMessages.push({ sender: 'companion', text: item.reply, spark: item.spark });
+            saveState();
+            renderSofaChat();
+        }
+
+        function sendCustomSofaMessage() {
+            const input = document.getElementById('sofa-chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+            input.value = '';
+            state.chatMessages.push({ sender: 'user', text });
+            const spark = sparkPool[Math.floor(Math.random() * sparkPool.length)];
+            state.chatMessages.push({
+                sender: 'companion',
+                text: 'Thank you for sharing that out loud with me here on the sofa. You don’t have to carry it all alone—let’s take one gentle, low-pressure step right now.',
+                spark
+            });
+            saveState();
+            renderSofaChat();
+        }
+
+        function pinChatSparkToCards(sparkText) {
+            state.careCards.unshift({
+                id: 'cc-' + Date.now(),
+                text: sparkText + ' ✨',
+                tint: state.seat === 'loveseat' ? 'blush' : 'kraft',
+                done: false
+            });
+            saveState();
+            renderCareCards();
+            triggerSparkBurst('📌');
+        }
+
+        // =================================================================
+        // 5. JOURNAL, HABITS, BOREDOM JAR & LISTS
+        // =================================================================
+        function shuffleJournalPrompt() {
+            state.journalPromptIdx = ((state.journalPromptIdx || 0) + 1) % journalPrompts.length;
+            saveState();
+            renderJournal();
+        }
+
+        function saveJournalEntry() {
+            const input = document.getElementById('journal-entry-input');
+            const text = input.value.trim();
+            if (!text) return;
+            const sticker = document.getElementById('journal-sticker-select').value;
+            state.journalEntries.unshift({
+                id: 'je-' + Date.now(),
+                sticker,
+                prompt: journalPrompts[state.journalPromptIdx % journalPrompts.length],
+                text,
+                date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+            });
+            input.value = '';
+            saveState();
+            renderJournal();
+            triggerSparkBurst('📖');
+            advanceBlossomProgress(1);
+        }
+
+        function toggleHabitDay(hIdx, dIdx) {
+            if (!state.habits[hIdx]) return;
+            state.habits[hIdx].days[dIdx] = !state.habits[hIdx].days[dIdx];
+            saveState();
+            renderHabits();
+            if (state.habits[hIdx].days[dIdx]) triggerSparkBurst('🌿');
+        }
+
+        function pullBoredomActivity() {
+            state.boredomIdx = ((state.boredomIdx || 0) + 1) % boredomIdeas.length;
+            saveState();
+            document.getElementById('boredom-jar-result').textContent = `“${boredomIdeas[state.boredomIdx]}”`;
+            triggerSparkBurst('🎲');
+        }
+
+        function pinBoredomIdeaToCards() {
+            const idea = boredomIdeas[(state.boredomIdx || 0) % boredomIdeas.length];
+            pinChatSparkToCards(idea);
+        }
+
+        function quickAddGrocery(text) {
+            state.groceries.unshift({ id: 'g-' + Date.now(), text, checked: false });
+            saveState();
+            renderLists();
+        }
+
+        function addGroceryItem() {
+            const input = document.getElementById('grocery-input');
+            const text = input.value.trim();
+            if (!text) return;
+            quickAddGrocery(text);
+            input.value = '';
+        }
+
+        function toggleGrocery(id) {
+            const item = state.groceries.find(g => g.id === id);
+            if (!item) return;
+            item.checked = !item.checked;
+            saveState();
+            renderLists();
+        }
+
+        function clearCheckedGroceries() {
+            state.groceries = state.groceries.filter(g => !g.checked);
+            saveState();
+            renderLists();
+        }
+
+        function addTodoItem() {
+            const input = document.getElementById('todo-input');
+            const text = input.value.trim();
+            if (!text) return;
+            state.todos.unshift({ id: 't-' + Date.now(), text, done: false });
+            input.value = '';
+            saveState();
+            renderLists();
+        }
+
+        function toggleTodo(id) {
+            const item = state.todos.find(t => t.id === id);
+            if (!item) return;
+            item.done = !item.done;
+            saveState();
+            renderLists();
+        }
+
+        function clearDoneTodos() {
+            state.todos = state.todos.filter(t => !t.done);
+            saveState();
+            renderLists();
+        }
+
+        // =================================================================
+        // 6. CLEANING OUT THE SOFA
+        // =================================================================
+        function toggleCleansePill(btn) {
+            const active = btn.classList.toggle('ring-2');
+            btn.style.backgroundColor = active ? 'var(--accent-soft)' : 'var(--bg-soft)';
+            btn.style.color = active ? 'var(--accent)' : 'var(--ink-main)';
+        }
+
+        function shakeOutSofaCushions() {
+            const card = document.getElementById('sofa-cleanse-card');
+            const textarea = document.getElementById('cleanse-dump-input');
+            card.classList.remove('animate-cushion-shake');
+            void card.offsetWidth;
+            card.classList.add('animate-cushion-shake');
+
+            // Permanently wipe negative text & reset weight pills
+            textarea.value = '';
+            document.querySelectorAll('.cleanse-pill').forEach(p => {
+                p.classList.remove('ring-2');
+                p.style.backgroundColor = 'var(--bg-soft)';
+                p.style.color = 'var(--ink-main)';
+            });
+
+            state.freshStarts = (state.freshStarts || 0) + 1;
+            saveState();
+            document.getElementById('fresh-starts-pill').textContent = `${state.freshStarts} Fresh Start${state.freshStarts === 1 ? '' : 's'}`;
+            document.getElementById('cleanse-afterglow-box').classList.remove('hidden');
+
+            triggerSparkBurst('🌬️');
+            advanceBlossomProgress(1);
+        }
+
+        // =================================================================
+        // 6B. FREE & PLUS SIGNATURE FEATURES (BODY-DOUBLING, CAPSULE, BLANKET, SHARE)
+        // =================================================================
+        let bodyDoubleInterval = null;
+        let bodyDoubleSecondsLeft = 300;
+
+        function setBodyDoubleMinutes(mins) {
+            if (bodyDoubleInterval) return;
+            state.bodyDoubleMinutes = mins;
+            bodyDoubleSecondsLeft = mins * 60;
+            saveState();
+            renderBodyDoublingTimer();
+        }
+
+        function toggleBodyDoubleTimer() {
+            const btn = document.getElementById('body-double-action-btn');
+            const status = document.getElementById('body-double-status');
+            if (bodyDoubleInterval) {
+                clearInterval(bodyDoubleInterval);
+                bodyDoubleInterval = null;
+                bodyDoubleSecondsLeft = (state.bodyDoubleMinutes || 5) * 60;
+                btn.textContent = 'Sit Together 🕯️';
+                status.classList.add('hidden');
+                renderBodyDoublingTimer();
+                return;
+            }
+
+            bodyDoubleSecondsLeft = (state.bodyDoubleMinutes || 5) * 60;
+            btn.textContent = 'Pause / Reset';
+            status.classList.remove('hidden');
+            triggerSparkBurst('🕯️');
+
+            bodyDoubleInterval = setInterval(() => {
+                bodyDoubleSecondsLeft--;
+                renderBodyDoublingTimer();
+                if (bodyDoubleSecondsLeft <= 0) {
+                    clearInterval(bodyDoubleInterval);
+                    bodyDoubleInterval = null;
+                    bodyDoubleSecondsLeft = (state.bodyDoubleMinutes || 5) * 60;
+                    btn.textContent = 'Sit Together 🕯️';
+                    status.textContent = '✨ Gentle chime! You showed up and sat through it—+1 step lit!';
+                    triggerSparkBurst('🎉');
+                    advanceBlossomProgress(1);
+                    renderBodyDoublingTimer();
+                }
+            }, 1000);
+        }
+
+        function renderBodyDoublingTimer() {
+            const mins = state.bodyDoubleMinutes || 5;
+            [5, 10].forEach(m => {
+                const b = document.getElementById('bd-min-' + m);
+                if (!b) return;
+                b.style.backgroundColor = mins === m ? 'var(--secondary-soft)' : 'var(--bg-soft)';
+                b.style.borderColor = mins === m ? 'var(--secondary)' : 'var(--border-subtle)';
+                b.style.color = mins === m ? 'var(--secondary)' : 'var(--ink-main)';
+            });
+            const mStr = String(Math.floor(bodyDoubleSecondsLeft / 60)).padStart(2, '0');
+            const sStr = String(bodyDoubleSecondsLeft % 60).padStart(2, '0');
+            const clock = document.getElementById('body-double-clock');
+            if (clock) clock.textContent = `${mStr}:${sStr}`;
+        }
+
+        // Free Feature 2: Time-Capsule Envelope Under the Cushion
+        function tuckCapsuleEnvelope() {
+            const input = document.getElementById('capsule-note-input');
+            const text = input.value.trim();
+            if (!text) return;
+            state.timeCapsules.unshift({
+                id: 'tc-' + Date.now(),
+                text,
+                date: 'Sealed ' + new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+            });
+            input.value = '';
+            saveState();
+            renderDreamTab();
+            triggerSparkBurst('✉️');
+        }
+
+        function openRandomCapsuleEnvelope() {
+            if (!state.timeCapsules || !state.timeCapsules.length) return;
+            const pick = state.timeCapsules[Math.floor(Math.random() * state.timeCapsules.length)];
+            document.getElementById('capsule-opened-date').textContent = `${pick.date} • From Past-You`;
+            document.getElementById('capsule-opened-text').textContent = `“${pick.text}”`;
+            document.getElementById('capsule-opened-card').classList.remove('hidden');
+            triggerSparkBurst('💌');
+        }
+
+        // Plus Feature 1 & 2: Pass the Throw Blanket & Pocket Sofa-Share Link
+        function togglePlusMembershipPreview() {
+            state.isPlusMember = !state.isPlusMember;
+            saveState();
+            renderAll();
+            triggerSparkBurst(state.isPlusMember ? '✨' : '🛋️');
+        }
+
+        function drawNextBlanketNote() {
+            state.blanketNoteIdx = ((state.blanketNoteIdx || 0) + 1) % state.customBlanketNotes.length;
+            saveState();
+            renderBlanketRelay();
+        }
+
+        function sendBlanketSqueeze() {
+            const note = state.customBlanketNotes[state.blanketNoteIdx % state.customBlanketNotes.length];
+            if (note) note.squeezes = (note.squeezes || 10) + 1;
+            saveState();
+            renderBlanketRelay();
+            triggerSparkBurst('❤️');
+        }
+
+        function leaveBlanketNote() {
+            const input = document.getElementById('blanket-leave-input');
+            const raw = input.value.trim();
+            if (!raw) return;
+            const seatLabel = state.seat === 'loveseat' ? 'Left on a Plush Loveseat' : 'Left on a Classic La-Z-Boy';
+            state.customBlanketNotes.unshift({
+                text: `“${raw}”`,
+                from: `${seatLabel} • Just now`,
+                squeezes: 1
+            });
+            state.blanketNoteIdx = 0;
+            input.value = '';
+            saveState();
+            renderBlanketRelay();
+            triggerSparkBurst('🧶');
+        }
+
+        function renderBlanketRelay() {
+            const isPlus = !!state.isPlusMember;
+            const lockedBox = document.getElementById('blanket-locked-box');
+            const unlockedBox = document.getElementById('blanket-unlocked-box');
+            const badge = document.getElementById('blanket-tier-badge');
+            if (lockedBox && unlockedBox) {
+                lockedBox.classList.toggle('hidden', isPlus);
+                unlockedBox.classList.toggle('hidden', !isPlus);
+            }
+            if (badge) badge.textContent = isPlus ? '🧶 Active Member' : '✨ Plus Perk';
+
+            const note = state.customBlanketNotes[(state.blanketNoteIdx || 0) % state.customBlanketNotes.length];
+            if (note) {
+                const txtEl = document.getElementById('blanket-received-text');
+                const fromEl = document.getElementById('blanket-received-from');
+                const sqEl = document.getElementById('blanket-squeeze-count');
+                if (txtEl) txtEl.textContent = note.text;
+                if (fromEl) fromEl.textContent = `— ${note.from}`;
+                if (sqEl) sqEl.textContent = note.squeezes || 1;
+            }
+        }
+
+        function copyPocketSofaShareLink() {
+            const hostName = encodeURIComponent(state.userName || 'Your Friend');
+            const seatType = state.seat || 'loveseat';
+            const baseUrl = window.location.href.split('?')[0];
+            const shareUrl = `${baseUrl}?sofaHost=${hostName}&seat=${seatType}`;
+            const temp = document.createElement('textarea');
+            temp.value = `Pull up a cushion beside me on Sit & Bloom 🛋️✨ ${shareUrl}`;
+            document.body.appendChild(temp);
+            temp.select();
+            try {
+                document.execCommand('copy');
+                const st = document.getElementById('sofa-share-status');
+                st.textContent = 'Copied your personal “Other Cushion” invite link! 🛋️💌';
+                st.classList.remove('hidden');
+                triggerSparkBurst('🔗');
+            } catch (e) {}
+            document.body.removeChild(temp);
+        }
+
+        // =================================================================
+        // 7. DREAM PATH, KEEPSAKES & MY CORNER DRAWER
+        // =================================================================
+        function advanceBlossomProgress(amount) {
+            state.blossomProgress = (state.blossomProgress || 0) + amount;
+            if (state.blossomProgress >= 5) {
+                state.blossomProgress = 0;
+                const charm = {
+                    id: 'ks-' + Date.now(),
+                    icon: state.seat === 'loveseat' ? '🌸' : '🔥',
+                    title: state.goalText,
+                    note: 'Completed gently, one small step at a time.',
+                    date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+                };
+                state.keepsakes.unshift(charm);
+                document.getElementById('celebration-keepsake-note').textContent =
+                    `You completed "${state.goalText}"! A permanent keepsake charm has been tucked into your Treasure Box.`;
+                document.getElementById('keepsake-celebration-modal').classList.remove('hidden');
+            }
+            saveState();
+            renderDreamTab();
+        }
+
+        function closeCelebrationModal() {
+            document.getElementById('keepsake-celebration-modal').classList.add('hidden');
+        }
+
+        function promptNewGoal() {
+            document.getElementById('goal-editor-box').classList.toggle('hidden');
+            document.getElementById('custom-goal-input').value = state.goalText;
+        }
+
+        function saveCustomGoal() {
+            const val = document.getElementById('custom-goal-input').value.trim();
+            if (!val) return;
+            state.goalText = val;
+            document.getElementById('goal-editor-box').classList.add('hidden');
+            saveState();
+            renderDreamTab();
+        }
+
+        // Step 3: My Corner Personalization Drawer
+        function openProfileDrawer() {
+            document.getElementById('profile-user-name').value = state.userName || '';
+            document.getElementById('profile-companion-name').value = state.companionName || '';
+            document.getElementById('keepsake-export-status').classList.add('hidden');
+            renderCustomHabitsManager();
+            document.getElementById('profile-drawer-modal').classList.remove('hidden');
+        }
+
+        function closeProfileDrawer() {
+            document.getElementById('profile-drawer-modal').classList.add('hidden');
+        }
+
+        function saveProfileNames() {
+            state.userName = document.getElementById('profile-user-name').value.trim();
+            state.companionName = document.getElementById('profile-companion-name').value.trim();
+            saveState();
+            renderAll();
+            triggerSparkBurst('🪴');
+            closeProfileDrawer();
+        }
+
+        function renderCustomHabitsManager() {
+            const list = document.getElementById('custom-habits-manage-list');
+            list.innerHTML = '';
+            state.habits.forEach((h, idx) => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center justify-between px-3 py-2 rounded-xl border text-xs';
+                row.style.backgroundColor = 'var(--bg-soft)';
+                row.style.borderColor = 'var(--border-subtle)';
+                row.innerHTML = `
+                    <span class="font-semibold">${h.icon} ${escapeHtml(h.label)}</span>
+                    ${state.habits.length > 1 ? `<button type="button" onclick="removeCustomHabit(${idx})" class="font-bold" style="color: var(--accent);">Remove</button>` : '<span class="opacity-60">Core</span>'}
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        function addCustomHabit() {
+            const icon = document.getElementById('new-habit-icon').value || '🌸';
+            const input = document.getElementById('new-habit-label');
+            const label = input.value.trim();
+            if (!label || state.habits.length >= 7) return;
+            state.habits.push({ id: 'h-' + Date.now(), icon, label, days: [false, false, false, false, false, false, false] });
+            input.value = '';
+            saveState();
+            renderHabits();
+            renderCustomHabitsManager();
+        }
+
+        function removeCustomHabit(idx) {
+            if (state.habits.length <= 1) return;
+            state.habits.splice(idx, 1);
+            saveState();
+            renderHabits();
+            renderCustomHabitsManager();
+        }
+
+        function resetDailyCareCards() {
+            state.careCards.forEach(c => { c.done = false; });
+            saveState();
+            renderCareCards();
+            const status = document.getElementById('keepsake-export-status');
+            status.textContent = 'All index care cards unstamped for a fresh day! 🗂️';
+            status.classList.remove('hidden');
+        }
+
+        function buildKeepsakeText() {
+            const who = state.userName ? `${state.userName}'s` : 'My';
+            const lines = [
+                `=== ${who.toUpperCase()} SIT & BLOOM KEEPSAKE BOOK ===`,
+                `Current Dream: ${state.goalText} | Fresh Starts: ${state.freshStarts || 0}`,
+                '',
+                '--- KEEPSAKE CHARMS ---',
+                ...(state.keepsakes.length ? state.keepsakes.map(k => `• ${k.icon} ${k.title} (${k.date})`) : ['• Gathering my first 5 blossoms one gentle step at a time.']),
+                '',
+                '--- JOURNAL REFLECTIONS ---',
+                ...state.journalEntries.slice(0, 10).map(j => `• [${j.date}] ${j.sticker}: ${j.text}`)
+            ];
+            return lines.join('\n');
+        }
+
+        function copyKeepsakeSummary() {
+            const temp = document.createElement('textarea');
+            temp.value = buildKeepsakeText();
+            document.body.appendChild(temp);
+            temp.select();
+            try {
+                document.execCommand('copy');
+                const status = document.getElementById('keepsake-export-status');
+                status.textContent = 'Copied your Keepsake Book to clipboard! 📋';
+                status.classList.remove('hidden');
+            } catch (e) {}
+            document.body.removeChild(temp);
+        }
+
+        function printKeepsakeBook() {
+            const win = window.open('', '_blank', 'width=640,height=780');
+            if (!win) { copyKeepsakeSummary(); return; }
+            win.document.write(`<html><body style="font-family:Georgia,serif;padding:36px;line-height:1.7;"><h1>Sit & Bloom — Keepsake Book</h1><pre style="white-space:pre-wrap;font-family:Georgia,serif;">${escapeHtml(buildKeepsakeText())}</pre></body></html>`);
+            win.document.close();
+            win.print();
+        }
+
+        // =================================================================
+        // 8. TAB NAVIGATION & FULL RENDERERS
+        // =================================================================
+        function switchTab(tabName) {
+            state.activeTab = tabName;
+            saveState();
+            ['today', 'talk', 'journal', 'play', 'lists', 'cleanse', 'dream'].forEach(t => {
+                const sec = document.getElementById('tab-' + t);
+                const nav = document.getElementById('nav-' + t);
+                if (sec) sec.classList.toggle('hidden', t !== tabName);
+                if (nav) {
+                    nav.style.backgroundColor = t === tabName ? 'var(--accent-soft)' : 'transparent';
+                    nav.style.color = t === tabName ? 'var(--accent)' : 'var(--ink-muted)';
+                }
+            });
+        }
+
+        function renderSideTable() {
+            ['tea', 'coffee', 'cocoa', 'lemonade'].forEach(k => {
+                const btn = document.getElementById('drink-btn-' + k);
+                if (!btn) return;
+                const active = state.drink === k;
+                btn.style.backgroundColor = active ? 'var(--accent-soft)' : 'var(--bg-soft)';
+                btn.style.borderColor = active ? 'var(--accent)' : 'var(--border-subtle)';
+            });
+            const d = drinkCatalog[state.drink] || drinkCatalog.tea;
+            document.getElementById('active-drink-emoji').textContent = d.emoji;
+            document.getElementById('active-drink-name').textContent = d.name;
+            document.getElementById('active-drink-note').textContent = d.note;
+            document.getElementById('sip-progress-label').textContent = `${state.drinkSips || 0} / 5 Comfort Sips`;
+
+            ['off', 'fire', 'rain', 'hum'].forEach(s => {
+                const btn = document.getElementById('sound-btn-' + s);
+                if (!btn) return;
+                const active = state.soundscape === s;
+                btn.style.backgroundColor = active ? 'var(--secondary-soft)' : 'var(--bg-soft)';
+                btn.style.borderColor = active ? 'var(--secondary)' : 'var(--border-subtle)';
+                btn.style.color = active ? 'var(--secondary)' : 'var(--ink-main)';
+            });
+        }
+
+        function renderCareCards() {
+            const list = document.getElementById('care-cards-list');
+            list.innerHTML = '';
+            state.careCards.forEach(card => {
+                const tint = cardTints[card.tint] || cardTints.blush;
+                const el = document.createElement('button');
+                el.type = 'button';
+                el.onclick = () => toggleCareCard(card.id);
+                el.className = 'w-full text-left rounded-2xl p-3.5 border-2 index-card-ruled shadow-2xs transition-all flex items-center justify-between gap-3 relative overflow-hidden';
+                el.style.backgroundColor = tint.bg;
+                el.style.borderColor = tint.border;
+                el.style.color = tint.ink;
+                el.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-bold shrink-0" style="border-color: ${tint.ink}; background-color: ${card.done ? tint.ink : 'transparent'}; color: ${card.done ? '#fff' : tint.ink};">
+                            ${card.done ? '✓' : ''}
+                        </span>
+                        <span class="font-handwritten text-[22px] leading-snug ${card.done ? 'line-through opacity-65' : ''}">${escapeHtml(card.text)}</span>
+                    </div>
+                    ${card.done ? `<span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-white/80 shrink-0" style="color: #5d8a74;">Proud of You ✨</span>` : ''}
+                `;
+                list.appendChild(el);
+            });
+        }
+
+        function renderSparks() {
+            const list = document.getElementById('daily-sparks-list');
+            list.innerHTML = '';
+            let doneCount = 0;
+            state.sparks.forEach(sp => {
+                if (sp.done) doneCount++;
+                const row = document.createElement('div');
+                row.className = 'rounded-2xl p-3.5 border flex items-center justify-between gap-2.5 transition-all';
+                row.style.backgroundColor = sp.done ? 'var(--secondary-soft)' : 'var(--card-bg)';
+                row.style.borderColor = 'var(--border-subtle)';
+                row.innerHTML = `
+                    <button type="button" onclick="toggleSparkDone('${sp.id}')" class="flex items-center gap-3 text-left flex-1">
+                        <span class="w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-bold shrink-0" style="border-color: var(--secondary); background-color: ${sp.done ? 'var(--secondary)' : 'transparent'}; color: #fff;">
+                            ${sp.done ? '✓' : ''}
+                        </span>
+                        <span class="text-xs sm:text-sm font-medium leading-snug ${sp.done ? 'line-through opacity-70' : ''}">${escapeHtml(sp.text)}</span>
+                    </button>
+                    <button type="button" onclick="swapSpark('${sp.id}')" class="min-h-[32px] px-2.5 py-1 rounded-xl border text-[11px] font-bold shrink-0" style="background-color: var(--bg-soft); border-color: var(--border-subtle); color: var(--ink-muted);">
+                        Swap ↻
+                    </button>
+                `;
+                list.appendChild(row);
+            });
+            document.getElementById('sparks-done-pill').textContent = `${doneCount} / 3 Done`;
+        }
+
+        function renderSofaChat() {
+            const feed = document.getElementById('sofa-chat-feed');
+            feed.innerHTML = '';
+            state.chatMessages.forEach(msg => {
+                const wrap = document.createElement('div');
+                wrap.className = `flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`;
+                const bubble = document.createElement('div');
+                bubble.className = 'max-w-[88%] rounded-2xl p-3.5 border text-xs leading-relaxed space-y-2';
+                bubble.style.backgroundColor = msg.sender === 'user' ? 'var(--accent-soft)' : 'var(--card-bg)';
+                bubble.style.borderColor = 'var(--border-subtle)';
+                bubble.innerHTML = `<p>${escapeHtml(msg.text)}</p>`;
+                if (msg.spark) {
+                    const safeSpark = msg.spark.replace(/'/g, "\\'");
+                    bubble.innerHTML += `
+                        <div class="pt-1 border-t flex items-center justify-between gap-2" style="border-color: var(--border-subtle);">
+                            <span class="font-bold" style="color: var(--secondary);">✨ Spark: ${escapeHtml(msg.spark)}</span>
+                            <button type="button" onclick="pinChatSparkToCards('${safeSpark}')" class="px-2.5 py-1 rounded-lg text-[10px] font-bold text-white shrink-0" style="background-color: var(--secondary);">Pin 📌</button>
+                        </div>
+                    `;
+                }
+                wrap.appendChild(bubble);
+                feed.appendChild(wrap);
+            });
+            feed.scrollTop = feed.scrollHeight;
+        }
+
+        function renderJournal() {
+            document.getElementById('journal-prompt-text').textContent = journalPrompts[state.journalPromptIdx % journalPrompts.length];
+            const list = document.getElementById('journal-entries-list');
+            list.innerHTML = '';
+            state.journalEntries.forEach(entry => {
+                const card = document.createElement('div');
+                card.className = 'rounded-2xl p-3.5 border space-y-1.5';
+                card.style.backgroundColor = 'var(--card-bg)';
+                card.style.borderColor = 'var(--border-subtle)';
+                card.innerHTML = `
+                    <div class="flex items-center justify-between text-[11px] font-bold">
+                        <span style="color: var(--accent);">${escapeHtml(entry.sticker)}</span>
+                        <span style="color: var(--ink-muted);">${escapeHtml(entry.date)}</span>
+                    </div>
+                    <p class="text-xs leading-relaxed">${escapeHtml(entry.text)}</p>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function renderHabits() {
+            const list = document.getElementById('habits-tracker-list');
+            const dayLabels = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+            list.innerHTML = '';
+            state.habits.forEach((h, hIdx) => {
+                const row = document.createElement('div');
+                row.className = 'p-3 rounded-2xl border space-y-2';
+                row.style.backgroundColor = 'var(--bg-soft)';
+                row.style.borderColor = 'var(--border-subtle)';
+                const circles = h.days.map((done, dIdx) => `
+                    <button type="button" onclick="toggleHabitDay(${hIdx}, ${dIdx})" class="w-8 h-8 rounded-full border text-[11px] font-bold flex items-center justify-center transition-all" style="background-color: ${done ? 'var(--secondary)' : 'var(--card-bg)'}; border-color: ${done ? 'var(--secondary)' : 'var(--border-subtle)'}; color: ${done ? '#fff' : 'var(--ink-muted)'};">
+                        ${dayLabels[dIdx]}
+                    </button>
+                `).join('');
+                row.innerHTML = `
+                    <div class="text-xs font-bold">${h.icon} ${escapeHtml(h.label)}</div>
+                    <div class="flex items-center justify-between gap-1">${circles}</div>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        function renderLists() {
+            const gList = document.getElementById('grocery-list-items');
+            gList.innerHTML = '';
+            state.groceries.forEach(item => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.onclick = () => toggleGrocery(item.id);
+                btn.className = 'w-full text-left px-3 py-2 rounded-xl border text-xs flex items-center gap-2.5';
+                btn.style.backgroundColor = 'var(--bg-soft)';
+                btn.style.borderColor = 'var(--border-subtle)';
+                btn.innerHTML = `
+                    <span>${item.checked ? '✅' : '⬜'}</span>
+                    <span class="${item.checked ? 'line-through opacity-60' : 'font-medium'}">${escapeHtml(item.text)}</span>
+                `;
+                gList.appendChild(btn);
+            });
+
+            const tList = document.getElementById('todo-list-items');
+            tList.innerHTML = '';
+            state.todos.forEach(item => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.onclick = () => toggleTodo(item.id);
+                btn.className = 'w-full text-left px-3 py-2 rounded-xl border text-xs flex items-center gap-2.5';
+                btn.style.backgroundColor = 'var(--bg-soft)';
+                btn.style.borderColor = 'var(--border-subtle)';
+                btn.innerHTML = `
+                    <span>${item.done ? '✅' : '⬜'}</span>
+                    <span class="${item.done ? 'line-through opacity-60' : 'font-medium'}">${escapeHtml(item.text)}</span>
+                `;
+                tList.appendChild(btn);
+            });
+        }
+
+        function renderDreamTab() {
+            const isLove = state.seat === 'loveseat';
+            document.getElementById('dream-path-kicker').textContent = isLove ? '🌸 5-Blossom Dream Path' : '🔥 5-Hearth Light Path';
+            document.getElementById('blossom-count-badge').textContent = `${state.blossomProgress || 0} / 5 Lit`;
+            document.getElementById('current-goal-title').textContent = state.goalText;
+            document.getElementById('treasure-box-heading').textContent = isLove ? '🎁 Velvet Treasure Box' : '🪵 Walnut Keepsake Box';
+            const capPill = document.getElementById('capsule-count-pill');
+            if (capPill) capPill.textContent = `${(state.timeCapsules || []).length} Sealed`;
+
+            const stonesRow = document.getElementById('blossom-stones-row');
+            stonesRow.innerHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                const lit = i <= (state.blossomProgress || 0);
+                const stone = document.createElement('div');
+                stone.className = 'h-14 rounded-2xl border flex flex-col items-center justify-center text-lg transition-all';
+                stone.style.backgroundColor = lit ? 'var(--accent-soft)' : 'var(--bg-soft)';
+                stone.style.borderColor = lit ? 'var(--accent)' : 'var(--border-subtle)';
+                stone.innerHTML = `<span>${lit ? (isLove ? '🌸' : '🔥') : '○'}</span><span class="text-[10px] font-bold mt-0.5">Step ${i}</span>`;
+                stonesRow.appendChild(stone);
+            }
+
+            const shelf = document.getElementById('keepsakes-shelf-list');
+            shelf.innerHTML = '';
+            if (!state.keepsakes.length) {
+                shelf.innerHTML = `<p class="text-xs italic" style="color: var(--ink-muted);">Light all 5 steps above to earn your first permanent Keepsake Charm!</p>`;
+            } else {
+                state.keepsakes.forEach(k => {
+                    const item = document.createElement('div');
+                    item.className = 'p-3 rounded-2xl border text-xs space-y-1';
+                    item.style.backgroundColor = 'var(--bg-soft)';
+                    item.style.borderColor = 'var(--border-subtle)';
+                    item.innerHTML = `
+                        <div class="flex justify-between font-bold">
+                            <span>${k.icon} ${escapeHtml(k.title)}</span>
+                            <span style="color: var(--ink-muted);">${escapeHtml(k.date)}</span>
+                        </div>
+                        <p style="color: var(--ink-muted);">${escapeHtml(k.note)}</p>
+                    `;
+                    shelf.appendChild(item);
+                });
+            }
+        }
+
+        function renderAll() {
+            const isLove = state.seat === 'loveseat';
+            document.body.classList.toggle('theme-loveseat', isLove);
+            document.body.classList.toggle('theme-lazboy', !isLove);
+            document.body.classList.toggle('lamp-on', !!state.lampMode);
+
+            // Toggle Onboarding vs Main App
+            document.getElementById('onboarding-screen').classList.toggle('hidden', !!state.onboarded);
+            document.getElementById('main-app-shell').classList.toggle('hidden', !state.onboarded);
+
+            // Header labels
+            document.getElementById('header-seat-emoji').textContent = isLove ? '🌷' : '🪵';
+            document.getElementById('header-seat-sub').textContent = isLove ? 'Loveseat • Switch' : 'La-Z-Boy • Switch';
+            document.getElementById('lamp-toggle-icon').textContent = state.lampMode ? '🪔' : '☀️';
+            document.getElementById('lamp-toggle-text').textContent = state.lampMode ? 'Lamp On' : 'Sunlit';
+            document.getElementById('header-profile-label').textContent = state.userName || 'My Corner';
+
+            // Today Greeting & Love Note
+            document.getElementById('sofa-companion-icon').textContent = isLove ? '🌷' : '🔥';
+            document.getElementById('sofa-companion-banner').textContent = state.userName
+                ? `${state.userName} & ${state.companionName || (isLove ? 'Future You' : 'Your Corner')} • ${isLove ? 'The Loveseat' : 'The La-Z-Boy'}`
+                : (isLove ? 'Sitting Together on the Loveseat' : 'Sitting Together on the La-Z-Boy');
+            document.getElementById('today-greeting').textContent = state.userName
+                ? `Welcome back to the sofa, ${state.userName}`
+                : 'Welcome back to the sofa';
+
+            const mood = moodsList[state.moodIndex % moodsList.length];
+            document.getElementById('today-mood-emoji').textContent = mood.emoji;
+            document.getElementById('today-mood-label').textContent = mood.label;
+
+            document.getElementById('future-love-text').textContent = state.currentLoveNoteText;
+            document.getElementById('future-love-signoff').textContent = state.companionName
+                ? `— Right beside you, ${state.companionName} ${isLove ? '🌸' : '🔥'}`
+                : (isLove ? '— Right beside you, Future You 🌸' : '— In your corner, Future You 🔥');
+            document.getElementById('message-pool-badge').textContent = `✨ Note #${Math.max(1, state.seenLoveNoteHashes.length)} of 400,000+`;
+            document.getElementById('fresh-starts-pill').textContent = `${state.freshStarts || 0} Fresh Start${state.freshStarts === 1 ? '' : 's'}`;
+
+            const plusBtn = document.getElementById('plus-preview-toggle-btn');
+            if (plusBtn) plusBtn.textContent = state.isPlusMember ? 'Preview Plus: ON ✨' : 'Preview Plus: OFF';
+
+            renderSideTable();
+            renderBodyDoublingTimer();
+            renderBlanketRelay();
+            renderCareCards();
+            renderSparks();
+            renderSofaChat();
+            renderJournal();
+            renderHabits();
+            renderLists();
+            renderDreamTab();
+            switchTab(state.activeTab || 'today');
+        }
+
+        window.onload = function () {
+            // Check if a friend opened a Pocket Sofa-Share invite link
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const host = params.get('sofaHost');
+                if (host) {
+                    state.companionName = decodeURIComponent(host);
+                    saveState();
+                }
+            } catch (e) {}
+            initPwaMetadata();
+            renderAll();
+        };
+
+        // =================================================================
+        // 9. DYNAMIC PWA MANIFEST & HOME-SCREEN SOFA APP ICON
+        // =================================================================
+        function initPwaMetadata() {
+            try {
+                const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <rect width="512" height="512" rx="116" fill="#fce8ee"/>
+                    <circle cx="256" cy="210" r="150" fill="#fff8fa" opacity="0.7"/>
+                    <rect x="96" y="180" width="320" height="145" rx="56" fill="#df889f"/>
+                    <rect x="122" y="204" width="126" height="96" rx="34" fill="#eca5b8"/>
+                    <rect x="264" y="204" width="126" height="96" rx="34" fill="#eca5b8"/>
+                    <rect x="64" y="238" width="62" height="122" rx="30" fill="#d1738c"/>
+                    <rect x="386" y="238" width="62" height="122" rx="30" fill="#d1738c"/>
+                    <rect x="106" y="302" width="300" height="68" rx="30" fill="#e797ad"/>
+                    <rect x="134" y="370" width="24" height="42" rx="10" fill="#8b5e4b"/>
+                    <rect x="354" y="370" width="24" height="42" rx="10" fill="#8b5e4b"/>
+                </svg>`;
+                const iconUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgIcon);
+                const appleIconEl = document.getElementById('pwa-apple-icon');
+                if (appleIconEl) appleIconEl.href = iconUrl;
+
+                const manifestObj = {
+                    name: 'Sit & Bloom — Cozy Sofa Companion',
+                    short_name: 'Sit & Bloom',
+                    start_url: '.',
+                    display: 'standalone',
+                    background_color: '#fdf5f6',
+                    theme_color: '#c96b84',
+                    icons: [
+                        { src: iconUrl, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' }
+                    ]
+                };
+                const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/manifest+json' });
+                const manifestLinkEl = document.getElementById('pwa-manifest-link');
+                if (manifestLinkEl) manifestLinkEl.href = URL.createObjectURL(manifestBlob);
+            } catch (e) {
+                // Gracefully ignore in sandboxed preview environments
+            }
+        }
+    </script>
+</body>
+</html>
